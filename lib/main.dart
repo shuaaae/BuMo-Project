@@ -1,4 +1,5 @@
 import 'package:angkas_clone_app/screens/landing_screen.dart';
+import 'package:angkas_clone_app/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Angkas Clone App',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme;
+      theme: AppTheme.lightTheme,
       home: LandingScreen(),
     );
   }

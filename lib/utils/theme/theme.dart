@@ -1,15 +1,16 @@
+import 'package:angkas_clone_app/utils/theme/text_theme.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
   AppTheme._();
 
-  static ThemeData LightTheme = ThemeData(
+  static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     fontFamily: 'Poppins',
     brightness: Brightness.light,
     primaryColor: Colors.blue,
     scaffoldBackgroundColor: Colors.white,
-    textTheme: TextTheme.lightTextTheme,
+    textTheme: AppTextTheme.lightTextTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -18,6 +19,6 @@ class AppTheme {
     brightness: Brightness.dark,
     primaryColor: Colors.blue,
     scaffoldBackgroundColor: Colors.black,
-    textTheme: TextTheme.darkTextTheme,
+    textTheme: AppTextTheme.darkTextTheme,
   );
 }
