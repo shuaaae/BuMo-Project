@@ -41,12 +41,14 @@ class LoginScreen extends StatelessWidget {
                       suffixIcon: Icon(Iconsax.eye_slash),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 30),
 
                   // Sign In Button
                   SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, child: const Text('Sign In'))),
+                  const SizedBox(height: 10),
                   // Login Button
                   SizedBox(width: double.infinity, child: OutlinedButton(onPressed: () {}, child: const Text('Login'))),
+                  const SizedBox(height: 30),
                 ],
               ))
             ],
