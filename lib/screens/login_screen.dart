@@ -1,4 +1,6 @@
+import 'package:angkas_clone_app/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -13,15 +15,20 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //1. LOGO
-                  const Placeholder(fallbackHeight: 150),
+                  const Placeholder(
+                    fallbackHeight: 150,
+                  ),
+                  const SizedBox(height: 10),
 
                   //2. HEADER
                   Text('Welcome', style: Theme.of(context).textTheme.headlineMedium),
                   Text('Put some text here', style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
+              const SizedBox(height: 30),
 
               //3. TEXT FIELDS
               Form(
@@ -31,7 +38,7 @@ class LoginScreen extends StatelessWidget {
                   TextFormField(
                     decoration: const InputDecoration(prefixIcon: Icon(Iconsax.direct_right), labelText: 'Email'),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 15),
 
                   // Password
                   TextFormField(
@@ -46,8 +53,17 @@ class LoginScreen extends StatelessWidget {
                   // Sign In Button
                   SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, child: const Text('Sign In'))),
                   const SizedBox(height: 10),
+
                   // Login Button
-                  SizedBox(width: double.infinity, child: OutlinedButton(onPressed: () {}, child: const Text('Login'))),
+                  SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                              return SignUpScreen();
+                            }));
+                          },
+                          child: const Text('Create Account'))),
                   const SizedBox(height: 30),
                 ],
               ))
