@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'package:angkas_clone_app/utils/constants/api_keys.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -19,6 +20,8 @@ class _MapPageState extends State<MapPage> {
   static const LatLng _pApplePark = LatLng(37.334644, -122.008972);
   LatLng? _currentPos = null;
 
+  Map<PolylineId, Polyline> polylines = {};
+
   Location _locationController = new Location();
 
   // Google Map Controller
@@ -27,7 +30,13 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    getLocationUpdates();
+    getLocationUpdates().then(
+      (_) => {
+        getPolylinePoints().then(
+          (coordinates) => {generatePolylineFromPoints(coordinates)},
+        ),
+      },
+    );
   }
 
   @override
@@ -53,8 +62,9 @@ class _MapPageState extends State<MapPage> {
                   markerId: MarkerId("_destionationLocation"),
                   icon: BitmapDescriptor.defaultMarker,
                   position: _pApplePark,
-                )
+                ),
               },
+              polylines: Set<Polyline>.of(polylines.values),
             ),
     );
   }
@@ -92,13 +102,54 @@ class _MapPageState extends State<MapPage> {
     }
 
     //tracks frequent location changes in user
-    _locationController.onLocationChanged.listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null && currentLocation.longitude != null) {
-        setState(() {
-          _currentPos = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-          _cameraToPosition(_currentPos!);
-        });
-      }
+    _locationController.onLocationChanged.listen(
+      (LocationData currentLocation) {
+        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+          setState(() {
+            _currentPos = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+            _cameraToPosition(_currentPos!);
+          });
+        }
+      },
+    );
+  }
+
+  Future<List<LatLng>> getPolylinePoints() async {
+    List<LatLng> polylineCoordinates = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      APIKeys.googleMaps,
+      PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
+      PointLatLng(
+        _pApplePark.latitude,
+        _pApplePark.longitude,
+      ),
+      travelMode: TravelMode.driving,
+    );
+    if (result.points.isNotEmpty) {
+      result.points.forEach((PointLatLng point) {
+        polylineCoordinates.add(
+          LatLng(point.latitude, point.longitude),
+        );
+      });
+    } else {
+      print(result.errorMessage);
+    }
+
+    return polylineCoordinates;
+  }
+
+  //
+  void generatePolylineFromPoints(List<LatLng> polylineCoordinates) async {
+    PolylineId id = PolylineId("poly");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.blueGrey,
+      points: polylineCoordinates,
+      width: 8,
+    );
+    setState(() {
+      polylines[id] = polyline;
     });
   }
 }
