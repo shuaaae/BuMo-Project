@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/routes.dart';
 import 'package:angkas_clone_app/screens/login_screen.dart';
 import 'package:angkas_clone_app/screens/map_screen.dart';
 import 'package:angkas_clone_app/utils/theme/theme.dart';
@@ -16,7 +17,8 @@ class MyApp extends StatelessWidget {
       title: 'Angkas Clone App',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: MapPage(),
+      initialRoute: '/',
+      routes: getApplicationRoutes(),
     );
   }
 }
