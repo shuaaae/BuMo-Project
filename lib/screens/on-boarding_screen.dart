@@ -126,10 +126,16 @@ class _OnBoardingState extends State<OnBoarding> {
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
             onTap: () {
-              _currentPageNotifier.value += 1;
-              _pageController.nextPage(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut);
+              if (_currentPageNotifier.value != 2) {
+                _currentPageNotifier.value += 1;
+                _pageController.nextPage(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut);
+              } else {
+                Navigator.pushNamed(context, '/login_page');
+              }
+
+              print(_currentPageNotifier.value);
             },
             child: Container(
               height: 50,

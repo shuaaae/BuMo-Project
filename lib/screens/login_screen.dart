@@ -1,6 +1,7 @@
 import 'package:angkas_clone_app/screens/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,14 +19,15 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //1. LOGO
-                  const Placeholder(
-                    fallbackHeight: 150,
-                  ),
+                  Image.asset('assets/images/Angkas.png'),
+
                   const SizedBox(height: 10),
 
                   //2. HEADER
-                  Text('Welcome', style: Theme.of(context).textTheme.headlineMedium),
-                  Text('Put some text here', style: Theme.of(context).textTheme.bodyMedium),
+                  Text('Welcome',
+                      style: Theme.of(context).textTheme.headlineMedium),
+                  Text('Put some text here',
+                      style: Theme.of(context).textTheme.bodyMedium),
                 ],
               ),
               const SizedBox(height: 30),
@@ -36,7 +38,9 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   // Email
                   TextFormField(
-                    decoration: const InputDecoration(prefixIcon: Icon(Iconsax.direct_right), labelText: 'Email'),
+                    decoration: const InputDecoration(
+                        prefixIcon: Icon(Iconsax.direct_right),
+                        labelText: 'Email'),
                   ),
                   const SizedBox(height: 15),
 
@@ -51,7 +55,13 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 30),
 
                   // Sign In Button
-                  SizedBox(width: double.infinity, child: ElevatedButton(onPressed: () {}, child: const Text('Sign In'))),
+                  SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/rider_map_screen');
+                          },
+                          child: const Text('Sign In'))),
                   const SizedBox(height: 10),
 
                   // Login Button
@@ -59,7 +69,8 @@ class LoginScreen extends StatelessWidget {
                       width: double.infinity,
                       child: OutlinedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
                               return SignUpScreen();
                             }));
                           },
