@@ -20,7 +20,10 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('assets/images/Angkas.png'),
+        child: Image.asset(
+          'assets/images/Angkas.png',
+          scale: 20,
+        ),
       ),
     );
   }

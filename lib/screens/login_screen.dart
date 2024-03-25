@@ -1,4 +1,5 @@
-import 'package:angkas_clone_app/screens/register_number_screen.dart';
+import 'package:angkas_clone_app/screens/map_screen.dart';
+import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +20,9 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //1. LOGO
-                  Image.asset('assets/images/Angkas.png'),
+                  Image.asset(
+                    'assets/images/Angkas.png',
+                  ),
 
                   const SizedBox(height: 10),
 
@@ -60,6 +63,10 @@ class LoginScreen extends StatelessWidget {
                       child: ElevatedButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/rider_map_screen');
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MapPage()));
                           },
                           child: const Text('Sign In'))),
                   const SizedBox(height: 10),

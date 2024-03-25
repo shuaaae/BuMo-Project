@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:angkas_clone_app/providers/auth_provider.dart';
-import 'package:angkas_clone_app/screens/number_verification_screen.dart';
+import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -49,23 +49,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onInputChanged: (PhoneNumber number) {
                         inputtedNumber = number;
                       },
-                      onInputValidated: (bool value) {
-                        print(value);
-                      },
-                      selectorConfig: SelectorConfig(
+                      selectorConfig: const SelectorConfig(
                         selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
                         useBottomSheetSafeArea: true,
                       ),
                       hintText: null,
                       ignoreBlank: false,
                       autoValidateMode: AutovalidateMode.disabled,
-                      selectorTextStyle: TextStyle(color: Colors.black),
+                      selectorTextStyle: const TextStyle(color: Colors.black),
                       initialValue: number,
                       textFieldController: controller,
                       formatInput: true,
-                      keyboardType: TextInputType.numberWithOptions(
+                      keyboardType: const TextInputType.numberWithOptions(
                           signed: true, decimal: true),
-                      inputBorder: OutlineInputBorder(),
                     ),
                   ],
                 )
@@ -79,12 +75,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: IntrinsicWidth(
           child: Row(
             children: [
-              Text(
+              const Text(
                 'We\'re sending you a verification PIN to your mobile \nnumber. We use your number to allow bikers \nand customer service to contact you about bookings.',
                 style: TextStyle(fontSize: 10, color: Colors.grey),
                 softWrap: true,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
               InkWell(
@@ -94,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(25)),
-                  child: Icon(
+                  child: const Icon(
                     Icons.arrow_forward,
                     color: Colors.white,
                   ),

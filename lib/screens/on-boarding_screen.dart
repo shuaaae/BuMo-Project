@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
@@ -132,7 +133,10 @@ class _OnBoardingState extends State<OnBoarding> {
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOut);
               } else {
-                Navigator.pushNamed(context, '/login_page');
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
               }
             },
             child: Container(
@@ -140,7 +144,7 @@ class _OnBoardingState extends State<OnBoarding> {
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 3, 143, 249),
                   borderRadius: BorderRadius.circular(50)),
-              child: Center(
+              child: const Center(
                 child: Text(
                   "Next",
                   style: TextStyle(
