@@ -1,10 +1,14 @@
+import 'package:angkas_clone_app/firebase_options.dart';
 import 'package:angkas_clone_app/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:angkas_clone_app/utils/theme/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,12 +16,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Angkas Clone App',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      initialRoute: '/',
-      routes: getApplicationRoutes(),
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'Angkas Clone App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        initialRoute: '/',
+        routes: getApplicationRoutes(),
+      ),
     );
   }
 }

@@ -13,6 +13,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String initialCountry = 'PH';
   final TextEditingController controller = TextEditingController();
 
+  PhoneNumber inputtedNumber = PhoneNumber();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     // Sign Up Button
                     InternationalPhoneNumberInput(
                       onInputChanged: (PhoneNumber number) {
-                        print(number.phoneNumber);
+                        inputtedNumber = number;
                       },
                       onInputValidated: (bool value) {
                         print(value);
@@ -57,9 +59,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       keyboardType: TextInputType.numberWithOptions(
                           signed: true, decimal: true),
                       inputBorder: OutlineInputBorder(),
-                      onSaved: (PhoneNumber number) {
-                        print('On Saved: $number');
-                      },
                     ),
                   ],
                 )
@@ -93,7 +92,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  // print(inputtedNumber);
+                },
               )
             ],
           ),

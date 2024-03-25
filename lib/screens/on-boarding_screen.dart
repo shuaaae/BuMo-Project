@@ -134,8 +134,6 @@ class _OnBoardingState extends State<OnBoarding> {
               } else {
                 Navigator.pushNamed(context, '/login_page');
               }
-
-              print(_currentPageNotifier.value);
             },
             child: Container(
               height: 50,
