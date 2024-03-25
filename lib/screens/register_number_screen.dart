@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:angkas_clone_app/providers/auth_provider.dart';
+import 'package:angkas_clone_app/screens/number_verification.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
@@ -36,6 +41,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 // Form Text Fields
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Sign Up Button
                     InternationalPhoneNumberInput(
@@ -92,8 +99,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     color: Colors.white,
                   ),
                 ),
-                onTap: () {
-                  // print(inputtedNumber);
+                onTap: () async {
+                  try {
+                    await FirebaseAuth.instance.verifyPhoneNumber(
+                      phoneNumber: inputtedNumber.phoneNumber,
+                      verificationCompleted:
+                          (PhoneAuthCredential credential) {},
+                      verificationFailed: (FirebaseAuthException e) {},
+                      codeSent: (String verificationId, int? resendToken) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => VerificationScreen(
+                                    verificationID: verificationId,
+                                    phoneNumber: inputtedNumber.phoneNumber)));
+                      },
+                      codeAutoRetrievalTimeout: (String verificationId) {},
+                    );
+                  } catch (error) {
+                    print(error);
+                  }
                 },
               )
             ],
