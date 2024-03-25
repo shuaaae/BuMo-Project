@@ -33,26 +33,24 @@ dependencies:
   
   location: ^5.0.0
   flutter_polyline_points: ^2.0.0
-  web: ^0.3.0
+  web: ^0.5.1
 
-  # I C O N S 
+  # I C O N S  A N D  I M A G E S
   cupertino_icons: ^1.0.6
   iconsax: ^0.0.8
+  flutter_svg: ^2.0.10+1
 
-
-  # G O O G L E
+  # G O O G L E  M A P S
   google_maps_flutter: ^2.5.3
-  
-
+  page_view_indicators: ^2.0.0
 
   # F I R E B A S E
   firebase_core: ^2.25.5
   firebase_core_web: ^2.11.5
-  page_view_indicators: ^2.0.0
-  flutter_svg: ^2.0.10+1
-
-
+  firebase_auth: ^4.17.8
   
+  # O T H E R  D E P E N D E N C I E S
+  intl_phone_number_input: ^0.7.4
 
 dev_dependencies:
 
