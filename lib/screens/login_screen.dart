@@ -1,4 +1,4 @@
-import 'package:angkas_clone_app/screens/sign_up_screen.dart';
+import 'package:angkas_clone_app/screens/register_number_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
