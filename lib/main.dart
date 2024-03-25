@@ -1,5 +1,5 @@
 import 'package:angkas_clone_app/firebase_options.dart';
-import 'package:angkas_clone_app/routes.dart';
+import 'package:angkas_clone_app/providers/auth_provider.dart';
 import 'package:angkas_clone_app/utils/theme/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        title: 'Angkas Clone App',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        initialRoute: '/',
-        routes: getApplicationRoutes(),
-      ),
+          title: 'Angkas Clone App',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          home: AuthCheck()),
     );
   }
 }
