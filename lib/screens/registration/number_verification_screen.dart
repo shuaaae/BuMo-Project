@@ -49,8 +49,7 @@ class VerificationScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   onSubmit: (String verificationCode) async {
                     try {
-                      final accountNotifer =
-                          ProviderContainer().read(accountProvider.notifier);
+                      final accountNotifer = ref.read(accountProvider.notifier);
 
                       PhoneAuthCredential credential =
                           PhoneAuthProvider.credential(
@@ -58,7 +57,7 @@ class VerificationScreen extends ConsumerWidget {
                               smsCode: verificationCode);
                       await auth.signInWithCredential(credential);
 
-                      accountNotifer.updateUser(
+                      accountNotifer.updateAccount(
                         phoneNumber: phoneNumber,
                         firstName: '',
                         middleName: null,
@@ -83,6 +82,18 @@ class VerificationScreen extends ConsumerWidget {
           ),
         ),
       ),
+      floatingActionButton: Container(
+        height: 50,
+        width: 50,
+        decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(25)),
+        child: const Icon(
+          Icons.arrow_forward,
+          color: Colors.white,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

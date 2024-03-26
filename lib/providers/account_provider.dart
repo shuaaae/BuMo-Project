@@ -1,7 +1,10 @@
 import 'package:angkas_clone_app/models/account.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AccountNotifier extends StateNotifier<Account> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   AccountNotifier()
       : super(
           Account(
@@ -15,7 +18,7 @@ class AccountNotifier extends StateNotifier<Account> {
           ),
         );
 
-  void updateUser(
+  void updateAccount(
       {String? phoneNumber,
       String? firstName,
       String? middleName,
@@ -31,5 +34,21 @@ class AccountNotifier extends StateNotifier<Account> {
         sex: sex,
         weight: weight,
         userType: userType);
+  }
+
+  Future<void> registerAccount() async {
+    try {
+      await _firestore.collection('accounts').add({
+        'phoneNumber': state.phoneNumber,
+        'firstName': state.firstName,
+        'middleName': state.middleName,
+        'lastName': state.lastName,
+        'sex': state.sex,
+        'weight': state.weight,
+        'userType': state.userType
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

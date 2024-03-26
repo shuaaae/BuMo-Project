@@ -1,8 +1,6 @@
-import 'package:angkas_clone_app/screens/map_screen.dart';
-import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
+import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:iconsax/iconsax.dart';
 
 class PassengerDetailsScreen extends ConsumerWidget {
   const PassengerDetailsScreen({super.key, required this.phoneNumber});
@@ -64,6 +62,47 @@ class PassengerDetailsScreen extends ConsumerWidget {
           ),
         ),
       ),
+      floatingActionButton: InkWell(
+        child: Container(
+          height: 55,
+          width: 110,
+          decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(25)),
+          child: const Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Next",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                Icon(
+                  Icons.arrow_forward,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ),
+        onTap: () {
+          final accountNotifer = ref.read(accountProvider.notifier);
+
+          accountNotifer.updateAccount(
+              phoneNumber: phoneNumber,
+              firstName: firstNameController.text,
+              middleName: middleNameController.text.isEmpty
+                  ? null
+                  : middleNameController.text,
+              lastName: lastNameController.text,
+              sex: null,
+              weight: null,
+              userType: 'passenger');
+        },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
