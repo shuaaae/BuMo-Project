@@ -42,19 +42,21 @@ dependencies:
   google_maps_flutter: ^2.5.3
   page_view_indicators: ^2.0.0
   location: ^5.0.0
+  flutter_polyline_points: ^2.0.0
 
   # F I R E B A S E
   firebase_core: ^2.25.5
   firebase_core_web: ^2.11.5
   firebase_auth: ^4.17.8
+  cloud_firestore: ^4.15.9
   
   # S T A T E  M A N A G E M E N T
   flutter_riverpod: ^2.5.1
 
   # O T H E R  D E P E N D E N C I E S
   intl_phone_number_input: ^0.7.4
-  flutter_polyline_points: ^2.0.0
   flutter_otp_text_field: ^1.1.2+1
+  
 
 dev_dependencies:
 
