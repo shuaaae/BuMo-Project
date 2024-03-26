@@ -1,27 +1,19 @@
-import 'dart:math';
-
-import 'package:angkas_clone_app/providers/auth_provider.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    PhoneNumber number = PhoneNumber(isoCode: 'PH');
+    String initialCountry = 'PH';
+    final TextEditingController controller = TextEditingController();
+    PhoneNumber inputtedNumber = PhoneNumber();
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  PhoneNumber number = PhoneNumber(isoCode: 'PH');
-  String initialCountry = 'PH';
-  final TextEditingController controller = TextEditingController();
-
-  PhoneNumber inputtedNumber = PhoneNumber();
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),

@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
-  String phoneNumber;
-  String firstName;
+class Account {
+  String? phoneNumber;
+  String? firstName;
   String? middleName;
-  String lastName;
-  String sex;
-  double weight;
-  String userType;
+  String? lastName;
+  String? sex;
+  double? weight;
+  String? userType;
 
-  User(
-      {required this.phoneNumber,
-      required this.firstName,
+  Account(
+      {this.phoneNumber,
+      this.firstName,
       this.middleName,
-      required this.lastName,
-      required this.sex,
-      required this.weight,
-      required this.userType});
+      this.lastName,
+      this.sex,
+      this.weight,
+      this.userType});
 
   Map<String, dynamic> toMap() {
     return {
@@ -30,9 +30,9 @@ class User {
     };
   }
 
-  factory User.fromSnapShot(DocumentSnapshot snapshot) {
+  factory Account.fromSnapShot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    return User(
+    return Account(
         phoneNumber: data['phoneNumber'],
         firstName: data['firstName'],
         middleName: data['middleName'],

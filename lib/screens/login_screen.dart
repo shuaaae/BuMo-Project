@@ -62,7 +62,6 @@ class LoginScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/rider_map_screen');
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -78,7 +77,7 @@ class LoginScreen extends StatelessWidget {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return SignUpScreen();
+                              return const SignUpScreen();
                             }));
                           },
                           child: const Text('Create Account'))),

@@ -25,7 +25,8 @@ class _MapPageState extends State<MapPage> {
   Location _locationController = new Location();
 
   // Google Map Controller
-  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
 
   @override
   void initState() {
@@ -45,8 +46,10 @@ class _MapPageState extends State<MapPage> {
       body: _currentPos == null
           ? const Center(child: Text('Loading...'))
           : GoogleMap(
-              onMapCreated: ((GoogleMapController controller) => _mapController.complete(controller)),
-              initialCameraPosition: CameraPosition(target: _pGooglePlex, zoom: 15),
+              onMapCreated: ((GoogleMapController controller) =>
+                  _mapController.complete(controller)),
+              initialCameraPosition:
+                  CameraPosition(target: _pGooglePlex, zoom: 15),
               markers: {
                 Marker(
                   markerId: MarkerId("_currentLocation"),
@@ -59,7 +62,7 @@ class _MapPageState extends State<MapPage> {
                   position: _pGooglePlex,
                 ),
                 Marker(
-                  markerId: MarkerId("_destionationLocation"),
+                  markerId: MarkerId("_destinationLocation"),
                   icon: BitmapDescriptor.defaultMarker,
                   position: _pApplePark,
                 ),
@@ -74,7 +77,8 @@ class _MapPageState extends State<MapPage> {
     final GoogleMapController controller = await _mapController.future;
     CameraPosition _newCameraPosition = CameraPosition(target: pos, zoom: 13);
 
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
+    await controller
+        .animateCamera(CameraUpdate.newCameraPosition(_newCameraPosition));
   }
 
   Future<void> getLocationUpdates() async {
@@ -104,9 +108,11 @@ class _MapPageState extends State<MapPage> {
     //tracks frequent location changes in user
     _locationController.onLocationChanged.listen(
       (LocationData currentLocation) {
-        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+        if (currentLocation.latitude != null &&
+            currentLocation.longitude != null) {
           setState(() {
-            _currentPos = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+            _currentPos =
+                LatLng(currentLocation.latitude!, currentLocation.longitude!);
             _cameraToPosition(_currentPos!);
           });
         }

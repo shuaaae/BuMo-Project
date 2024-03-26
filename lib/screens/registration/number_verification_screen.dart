@@ -1,30 +1,29 @@
+import 'package:angkas_clone_app/providers/account_provider.dart';
+import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:angkas_clone_app/models/account.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-class VerificationScreen extends StatefulWidget {
+final accountProvider =
+    StateNotifierProvider<AccountNotifier, Account>((ref) => AccountNotifier());
+
+class VerificationScreen extends ConsumerWidget {
   const VerificationScreen(
       {super.key, required this.phoneNumber, required this.verificationID});
   final String? phoneNumber;
   final String? verificationID;
 
   @override
-  State<VerificationScreen> createState() => _VerificationScreenState(
-      phoneNumber: phoneNumber, verificationID: verificationID);
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    String? phoneNumber;
+    String? verificationID;
+    PhoneNumber inputtedNumber = PhoneNumber();
 
-class _VerificationScreenState extends State<VerificationScreen> {
-  _VerificationScreenState(
-      {required this.phoneNumber, required this.verificationID});
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
-  final String? phoneNumber;
-  final String? verificationID;
-  PhoneNumber inputtedNumber = PhoneNumber();
-  final FirebaseAuth auth = FirebaseAuth.instance;
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
@@ -50,11 +49,30 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   onSubmit: (String verificationCode) async {
                     try {
+                      final accountNotifer =
+                          ProviderContainer().read(accountProvider.notifier);
+
                       PhoneAuthCredential credential =
                           PhoneAuthProvider.credential(
                               verificationId: verificationID!,
                               smsCode: verificationCode);
                       await auth.signInWithCredential(credential);
+
+                      accountNotifer.updateUser(
+                        phoneNumber: phoneNumber,
+                        firstName: '',
+                        middleName: null,
+                        lastName: '',
+                        sex: '',
+                        weight: 0.0,
+                        userType: '',
+                      );
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PassengerDetailsScreen(
+                                  phoneNumber: phoneNumber)));
                     } catch (e) {
                       print("Wrong Pin.");
                     }

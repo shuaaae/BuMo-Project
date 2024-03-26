@@ -1,5 +1,6 @@
 import 'package:angkas_clone_app/firebase_options.dart';
 import 'package:angkas_clone_app/screens/landing_screen.dart';
+import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
 import 'package:angkas_clone_app/utils/theme/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,7 +12,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseFirestore.instance.settings =
       const Settings(persistenceEnabled: true);
-  runApp(MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,12 +20,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-          title: 'Angkas Clone App',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          home: LandingScreen()),
-    );
+    return MaterialApp(
+        title: 'Angkas Clone App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: LandingScreen());
   }
 }
