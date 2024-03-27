@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/screens/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ class PassengerDetailsScreen extends ConsumerWidget {
   const PassengerDetailsScreen({super.key, required this.phoneNumber});
   final String phoneNumber;
 
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController firstNameController = TextEditingController(),
         middleNameController = TextEditingController(),
@@ -87,8 +89,8 @@ class PassengerDetailsScreen extends ConsumerWidget {
             ),
           ),
         ),
-        onTap: () {
-          final accountNotifer = ref.read(accountProvider.notifier);
+        onTap: () async {
+          final accountNotifer = ref.watch(accountProvider.notifier);
 
           accountNotifer.updateAccount(
               phoneNumber: phoneNumber,
@@ -100,6 +102,11 @@ class PassengerDetailsScreen extends ConsumerWidget {
               sex: null,
               weight: null,
               userType: 'passenger');
+
+          await accountNotifer.registerAccount();
+
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MapPage()));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

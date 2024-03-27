@@ -24,8 +24,6 @@ class MyApp extends StatelessWidget {
         title: 'Angkas Clone App',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
-        home: PassengerDetailsScreen(
-          phoneNumber: '',
-        ));
+        home: LandingScreen());
   }
 }

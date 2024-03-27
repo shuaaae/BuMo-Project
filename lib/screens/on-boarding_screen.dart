@@ -1,4 +1,5 @@
 import 'package:angkas_clone_app/screens/login_screen.dart';
+import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
@@ -136,7 +137,7 @@ class _OnBoardingState extends State<OnBoarding> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
+                        builder: (context) => const SignUpScreen()));
               }
             },
             child: Container(
