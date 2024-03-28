@@ -134,7 +134,7 @@ class _OnBoardingState extends State<OnBoarding> {
                     duration: Duration(milliseconds: 300),
                     curve: Curves.easeInOut);
               } else {
-                Navigator.pushReplacement(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const SignUpScreen()));
