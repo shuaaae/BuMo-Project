@@ -1,5 +1,6 @@
 import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
+import 'package:angkas_clone_app/utils/widgets/custom_selection_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,6 @@ class VerificationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String? phoneNumber;
-    String? verificationID;
-    PhoneNumber inputtedNumber = PhoneNumber();
-
     final FirebaseAuth auth = FirebaseAuth.instance;
 
     return Scaffold(
@@ -51,11 +48,11 @@ class VerificationScreen extends ConsumerWidget {
                     try {
                       final accountNotifer = ref.read(accountProvider.notifier);
 
-                      PhoneAuthCredential credential =
-                          PhoneAuthProvider.credential(
-                              verificationId: verificationID!,
-                              smsCode: verificationCode);
-                      await auth.signInWithCredential(credential);
+                      // PhoneAuthCredential credential =
+                      //     PhoneAuthProvider.credential(
+                      //         verificationId: verificationID!,
+                      //         smsCode: verificationCode);
+                      // await auth.signInWithCredential(credential);
 
                       accountNotifer.updateAccount(
                         phoneNumber: phoneNumber,
@@ -67,11 +64,20 @@ class VerificationScreen extends ConsumerWidget {
                         userType: '',
                       );
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PassengerDetailsScreen(
-                                  phoneNumber: phoneNumber)));
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return CustomSelectionDialog(onSelection: (role) {
+                              if (role == "passenger") {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            PassengerDetailsScreen(
+                                                phoneNumber: phoneNumber!)));
+                              } else if (role == "driver") {}
+                            });
+                          });
                     } catch (e) {
                       print("Wrong Pin.");
                     }

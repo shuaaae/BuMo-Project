@@ -89,21 +89,21 @@ class SignUpScreen extends ConsumerWidget {
                 ),
                 onTap: () async {
                   try {
-                    await FirebaseAuth.instance.verifyPhoneNumber(
-                      phoneNumber: inputtedNumber.phoneNumber,
-                      verificationCompleted:
-                          (PhoneAuthCredential credential) {},
-                      verificationFailed: (FirebaseAuthException e) {},
-                      codeSent: (String verificationId, int? resendToken) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => VerificationScreen(
-                                    verificationID: verificationId,
-                                    phoneNumber: inputtedNumber.phoneNumber)));
-                      },
-                      codeAutoRetrievalTimeout: (String verificationId) {},
-                    );
+                    // await FirebaseAuth.instance.verifyPhoneNumber(
+                    //   phoneNumber: inputtedNumber.phoneNumber,
+                    //   verificationCompleted:
+                    //       (PhoneAuthCredential credential) {},
+                    //   verificationFailed: (FirebaseAuthException e) {},
+                    //   codeSent: (String verificationId, int? resendToken) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => VerificationScreen(
+                                verificationID: "sad",
+                                phoneNumber: inputtedNumber.phoneNumber)));
+                    // },
+                    // codeAutoRetrievalTimeout: (String verificationId) {},
+                    // );
                   } catch (error) {
                     print(error);
                   }
