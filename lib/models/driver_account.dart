@@ -30,7 +30,7 @@ class DriverAccount {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     Map<String, dynamic> vehicleData = ['vehicle'] as Map<String, dynamic>;
     Map<String, dynamic> vechileModelData =
-        vehicleData['vechileModel'] as Map<String, dynamic>;
+        vehicleData['vehicleModel'] as Map<String, dynamic>;
 
     return DriverAccount(
         userID: data['userID'],

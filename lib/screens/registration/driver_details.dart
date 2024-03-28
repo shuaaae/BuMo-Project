@@ -1,17 +1,27 @@
+import 'package:angkas_clone_app/models/driver_account.dart';
+import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PassengerDetailsScreen extends ConsumerWidget {
-  const PassengerDetailsScreen({super.key, required this.phoneNumber});
+final driverAccountProvider =
+    StateNotifierProvider<DriverAccountNotifier, DriverAccount>(
+        (ref) => DriverAccountNotifier());
+
+class DriverDetailsScreen extends ConsumerWidget {
+  const DriverDetailsScreen({super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     TextEditingController firstNameController = TextEditingController(),
         middleNameController = TextEditingController(),
-        lastNameController = TextEditingController();
+        lastNameController = TextEditingController(),
+        drivingLicenseNumberController = TextEditingController(),
+        licensePlateController = TextEditingController(),
+        modelNameController = TextEditingController(),
+        modelColorController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -58,6 +68,42 @@ class PassengerDetailsScreen extends ConsumerWidget {
                         labelText: 'Last Name',
                         labelStyle: TextStyle(color: Colors.grey)),
                   ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: drivingLicenseNumberController,
+                    decoration: const InputDecoration(
+                        labelText: 'Driving License Number',
+                        labelStyle: TextStyle(color: Colors.grey)),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: licensePlateController,
+                    decoration: const InputDecoration(
+                        labelText: 'Vehicle License Plate',
+                        labelStyle: TextStyle(color: Colors.grey)),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: modelNameController,
+                    decoration: const InputDecoration(
+                        labelText: 'Model Name',
+                        labelStyle: TextStyle(color: Colors.grey)),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  TextFormField(
+                    controller: modelColorController,
+                    decoration: const InputDecoration(
+                        labelText: 'Model Color',
+                        labelStyle: TextStyle(color: Colors.grey)),
+                  ),
                 ],
               )
             ],
@@ -92,6 +138,8 @@ class PassengerDetailsScreen extends ConsumerWidget {
         ),
         onTap: () async {
           final accountNotifer = ref.watch(accountProvider.notifier);
+          final driverAccountNotifier =
+              ref.watch(driverAccountProvider.notifier);
 
           accountNotifer.updateAccount(
               phoneNumber: phoneNumber,
@@ -104,10 +152,17 @@ class PassengerDetailsScreen extends ConsumerWidget {
               weight: null,
               userType: 'driver');
 
-          await accountNotifer.registerAccount();
+          driverAccountNotifier.updateDriverAccount(
+              drivingLicenseNumber: drivingLicenseNumberController.text,
+              licensePlate: licensePlateController.text,
+              modelName: modelNameController.text,
+              modelColor: modelColorController.text);
 
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MapPage()));
+          String? accountID = await accountNotifer.registerAccount();
+          driverAccountNotifier.registerDriverAccount(accountID!);
+
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => const MapPage()));
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
