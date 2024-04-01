@@ -2,6 +2,7 @@ import 'package:angkas_clone_app/models/driver_account.dart';
 import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
+import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -137,32 +138,42 @@ class DriverDetailsScreen extends ConsumerWidget {
           ),
         ),
         onTap: () async {
-          final accountNotifer = ref.watch(accountProvider.notifier);
-          final driverAccountNotifier =
-              ref.watch(driverAccountProvider.notifier);
+          try {
+            final accountNotifer = ref.watch(accountProvider.notifier);
+            final driverAccountNotifier =
+                ref.watch(driverAccountProvider.notifier);
 
-          accountNotifer.updateAccount(
-              phoneNumber: phoneNumber,
-              firstName: firstNameController.text,
-              middleName: middleNameController.text.isEmpty
-                  ? null
-                  : middleNameController.text,
-              lastName: lastNameController.text,
-              sex: null,
-              weight: null,
-              userType: 'driver');
+            accountNotifer.updateAccount(
+                phoneNumber: phoneNumber,
+                firstName: firstNameController.text,
+                middleName: middleNameController.text.isEmpty
+                    ? null
+                    : middleNameController.text,
+                lastName: lastNameController.text,
+                sex: null,
+                weight: null,
+                userType: 'driver');
 
-          driverAccountNotifier.updateDriverAccount(
-              drivingLicenseNumber: drivingLicenseNumberController.text,
-              licensePlate: licensePlateController.text,
-              modelName: modelNameController.text,
-              modelColor: modelColorController.text);
+            driverAccountNotifier.updateDriverAccount(
+                drivingLicenseNumber: drivingLicenseNumberController.text,
+                licensePlate: licensePlateController.text,
+                modelName: modelNameController.text,
+                modelColor: modelColorController.text);
 
-          String? accountID = await accountNotifer.registerAccount();
-          driverAccountNotifier.registerDriverAccount(accountID!);
+            String? accountID = await accountNotifer.registerAccount();
+            driverAccountNotifier.registerDriverAccount(accountID!);
 
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => const MapPage()));
+            ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                "Driver Account Successfully created.", true, context));
+
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MapPage()));
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                "Something went wrong with Creating the Account.",
+                false,
+                context));
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

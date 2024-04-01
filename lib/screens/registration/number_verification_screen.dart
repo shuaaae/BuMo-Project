@@ -1,5 +1,6 @@
 import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
+import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:angkas_clone_app/utils/widgets/custom_selection_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -78,7 +79,10 @@ class VerificationScreen extends ConsumerWidget {
                             });
                           });
                     } catch (e) {
-                      print("Wrong Pin.");
+                      ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
+                          "Something went wrong with Verifying the OTP.",
+                          false,
+                          context));
                     }
                   },
                 ),
