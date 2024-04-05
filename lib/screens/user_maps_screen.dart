@@ -102,3 +102,29 @@ class _UserMapsScreenState extends State<UserMapsScreen> {
     );
   }
 }
+
+//WIDGETTTTS TEMPLATE
+
+Widget buildPickUpAndDropOffCard(BuildContext context) {
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    height: 50,
+    decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), spreadRadius: 5, blurRadius: 10)],
+        borderRadius: BorderRadius.circular(8)),
+    child: TextFormField(
+      decoration: const InputDecoration(
+        hintText: 'Pick up from?',
+        hintStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+        suffixIcon: Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Icon(
+            Icons.search,
+          ),
+        ),
+        border: InputBorder.none,
+      ),
+    ),
+  );
+}

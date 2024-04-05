@@ -1,6 +1,7 @@
 import 'package:angkas_clone_app/firebase_options.dart';
 import 'package:angkas_clone_app/screens/landing_screen.dart';
 import 'package:angkas_clone_app/screens/map_screen.dart';
+import 'package:angkas_clone_app/screens/passenger_maps_screen.dart';
 import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
 import 'package:angkas_clone_app/utils/theme/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +21,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Angkas Clone App', debugShowCheckedModeBanner: false, theme: AppTheme.lightTheme, home: MapPage());
+    return MaterialApp(title: 'Angkas Clone App', debugShowCheckedModeBanner: false, theme: AppTheme.lightTheme, home: PassengerMapsScreen());
   }
 }

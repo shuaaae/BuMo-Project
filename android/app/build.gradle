@@ -24,6 +24,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.angkas_clone_app"
+
+    compileSdkVersion 31
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
