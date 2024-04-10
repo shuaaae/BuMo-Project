@@ -1,5 +1,5 @@
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:angkas_clone_app/screens/rider-side/passenger_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -61,10 +61,13 @@ class CustomNavigationDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.history),
+            leading: const Icon(Icons.history),
             title: const Text('History'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PassengerHistoryScreen()));
             },
           ),
           ListTile(

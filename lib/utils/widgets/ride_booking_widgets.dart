@@ -57,7 +57,7 @@ class RideBookingWidgets extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -160,7 +160,7 @@ class RideBookingWidgets extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Container(
@@ -220,7 +220,7 @@ class RideBookingWidgets extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
