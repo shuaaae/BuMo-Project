@@ -90,7 +90,7 @@ class RideBookingWidgets extends StatelessWidget {
                                 .textTheme
                                 .bodyMedium!
                                 .copyWith(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                    fontSize: 16, fontWeight: FontWeight.w600),
                           )
                         ],
                       ),

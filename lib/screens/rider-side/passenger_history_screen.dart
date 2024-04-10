@@ -1,6 +1,5 @@
 import 'package:angkas_clone_app/utils/widgets/passenger_history_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PassengerHistoryScreen extends ConsumerWidget {
@@ -11,15 +10,17 @@ class PassengerHistoryScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
+        iconTheme:
+            IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
         backgroundColor: Theme.of(context).primaryColor,
-        title: Center(
-            child: Text(
+        title: Text(
           "History",
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
               .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-        )),
+        ),
+        centerTitle: true,
       ),
       body: Column(
         children: [

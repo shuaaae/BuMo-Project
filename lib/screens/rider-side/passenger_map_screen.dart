@@ -12,7 +12,7 @@ class PassengerMapScreen extends ConsumerWidget {
     final accountNotifier = ref.watch(accountProvider.notifier);
 
     return Scaffold(
-        backgroundColor: Colors.grey,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
