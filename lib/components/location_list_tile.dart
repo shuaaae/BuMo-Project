@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../constants.dart';
-
 class LocationListTile extends StatelessWidget {
   const LocationListTile({
     Key? key,
@@ -30,7 +28,7 @@ class LocationListTile extends StatelessWidget {
         const Divider(
           height: 2,
           thickness: 2,
-          color: secondaryColor5LightTheme,
+          color: Colors.grey,
         ),
       ],
     );
