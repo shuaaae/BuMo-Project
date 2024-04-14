@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/location_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,6 +11,18 @@ class LocationSearchScreen extends StatefulWidget {
 }
 
 class _LocationSearchScreenState extends State<LocationSearchScreen> {
+  void placeAutocomplate(String query) {
+    Uri uri = Uri.https(
+        "maps.googleapis.com",
+        'maps/api/place/autocomplete/json', //unencoded path
+        {
+          "input": query, //query parameter
+          "key": APIKeys.googleMaps, //API Key
+        });
+
+    //Then make GET request
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +30,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
         leading: Padding(
           padding: const EdgeInsets.only(left: 10),
           child: CircleAvatar(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.green,
             child: SvgPicture.asset(
               "assets/icons/location.svg",
               height: 16,
@@ -43,6 +56,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
       body: Column(
         children: [
           Form(
+            //TEXT FIELD FOR SEARCHING
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
@@ -68,6 +82,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             color: Colors.grey,
           ),
           Padding(
+            //CURRENT LOCATION BUTTON
             padding: const EdgeInsets.all(10),
             child: ElevatedButton.icon(
               onPressed: () {},
@@ -77,8 +92,8 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
               ),
               label: const Text("Use my Current Location"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.grey,
+                backgroundColor: Colors.grey,
+                foregroundColor: Colors.black,
                 elevation: 0,
                 fixedSize: const Size(double.infinity, 40),
                 shape: const RoundedRectangleBorder(
@@ -88,6 +103,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             ),
           ),
           const Divider(
+            //LIST TILE FOR SEARCHED RESULTS
             height: 4,
             thickness: 4,
             color: Colors.grey,

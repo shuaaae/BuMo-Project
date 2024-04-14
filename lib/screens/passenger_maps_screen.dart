@@ -1,11 +1,8 @@
 import 'package:angkas_clone_app/screens/location_search_screen.dart';
 import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PassengerMapsScreen extends StatefulWidget {
