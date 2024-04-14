@@ -22,6 +22,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Angkas Clone App', debugShowCheckedModeBanner: false, theme: AppTheme.lightTheme, home: LocationSearchScreen());
+    return MaterialApp(title: 'Angkas Clone App', debugShowCheckedModeBanner: false, theme: AppTheme.lightTheme, home: PassengerMapsScreen());
   }
 }

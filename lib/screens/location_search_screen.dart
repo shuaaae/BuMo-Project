@@ -1,7 +1,10 @@
 import 'package:angkas_clone_app/components/network_utils.dart';
+import 'package:angkas_clone_app/models/autocomplate_prediction.dart';
+import 'package:angkas_clone_app/models/place_auto_complate_response.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/location_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LocationSearchScreen extends StatefulWidget {
@@ -12,6 +15,8 @@ class LocationSearchScreen extends StatefulWidget {
 }
 
 class _LocationSearchScreenState extends State<LocationSearchScreen> {
+  List<AutocompletePrediction> placePredictions = []; //List for search locations
+
   void placeAutocomplate(String query) async {
     Uri uri = Uri.https(
         "maps.googleapis.com",
@@ -24,44 +29,23 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
     //Then make GET request
     String? response = await NetworkUtils.fetchUrl(uri);
     if (response != null) {
-      PlaceAutocompleteResponse result = PlaceAutocompleteResponse.parse
+      PlaceAutocompleteResponse result = PlaceAutocompleteResponse.parseAutocompleteResult(response);
+      if (result.predictions != null) {
+        setState(() {
+          placePredictions = result.predictions!;
+        });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: CircleAvatar(
-            backgroundColor: Colors.green,
-            child: SvgPicture.asset(
-              "assets/icons/location.svg",
-              height: 16,
-              width: 16,
-            ),
-          ),
-        ),
-        title: const Text(
-          "Set Delivery Location",
-          style: TextStyle(color: Colors.grey),
-        ),
-        actions: [
-          CircleAvatar(
-            backgroundColor: Colors.black,
-            child: IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.close, color: Colors.black),
-            ),
-          ),
-          const SizedBox(width: 10)
-        ],
-      ),
+      appBar: AppBar(),
       body: Column(
         children: [
           Form(
-            //TEXT FIELD FOR SEARCHING
+            //TEXT FIELD FOR PICK-UP LOCATION
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
@@ -112,15 +96,20 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             ),
           ),
           const Divider(
-            //LIST TILE FOR SEARCHED RESULTS
-            height: 4,
-            thickness: 4,
+            height: 2,
+            thickness: 2,
             color: Colors.grey,
           ),
-          LocationListTile(
-            press: () {},
-            location: "Banasree, Dhaka, Bangladesh",
-          ),
+          //LIST TILES FOR SEARCHED RESULTS
+          Expanded(
+            child: ListView.builder(
+              itemCount: placePredictions.length,
+              itemBuilder: (context, index) => LocationListTile(
+                press: () {},
+                location: placePredictions[index].description!,
+              ),
+            ),
+          )
         ],
       ),
     );

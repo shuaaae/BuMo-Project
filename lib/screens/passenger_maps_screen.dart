@@ -1,8 +1,12 @@
 import 'package:angkas_clone_app/screens/location_search_screen.dart';
+import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PassengerMapsScreen extends StatefulWidget {
@@ -13,52 +17,72 @@ class PassengerMapsScreen extends StatefulWidget {
 }
 
 class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
+  GoogleMapController? myMapController;
+  late FocusNode myFocusNode;
+  static const LatLng sourceLocation = LatLng(10.293617, 123.89755); //_pUSJRMain
+  static const LatLng destination = LatLng(10.29169, 123.86138); //_pUSJRBasak
+
   final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
-  GoogleMapController? myMapController;
-  Set<Marker> markers = {};
-
-  /*void placeAutocomplate(String query) async {
-    Uri uri = Uri.https(
-        "maps.googleapis.com",
-        'maps/api/place/autocomplete/json', // unencoder path
-        {
-          "input": query, // query parameter
-          "key": APIKeys.googleMaps, // make sure you add your api key
-        });
-    // its time to make the GET request
-
-    String? response = await RequestAssistant.fetchUrl(uri);
-
-    if (response != null) {
-      PlaceAutocompleteResponse result = PlaceAutocompleteResponse.parse
-    }
-  }*/
-  Future<Position> _determinePosition() async {
-    LocationPermission permission;
-
-    final hasPermission = await Permission.locationWhenInUse.serviceStatus.isEnabled;
-
-    permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-
-      if (permission == LocationPermission.denied) {
-        return Future.error("Location permission denied");
+  @override
+  void initState() {
+    super.initState();
+    getPolylinePoints();
+    myFocusNode = FocusNode();
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        // Remove focus from the TextField
+        myFocusNode.unfocus();
+        // Navigate to the new screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LocationSearchScreen()),
+        );
       }
+    });
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  LocationData? currentLocation;
+  //FUNCTION TO GET CURRENT LOCATION
+  void getCurrentLocation() {
+    Location location = Location();
+
+    location.getLocation().then((location) {
+      currentLocation = location;
+    });
+  }
+
+  List<LatLng> polylineCoordinates = [];
+  //FUNCTION TO CREATE POLYLINE POINTS FROM SOURCE TO DESTINATION LOCATIONS SET IN Markers()
+  void getPolylinePoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      APIKeys.googleMaps,
+      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach(
+        (PointLatLng point) => polylineCoordinates.add(
+          LatLng(
+            point.latitude,
+            point.longitude,
+          ),
+        ),
+      );
+      setState(() {});
     }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied');
-    }
-
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-    return position;
   }
 
   @override
@@ -70,8 +94,19 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
             mapType: MapType.normal,
             zoomControlsEnabled: false,
             zoomGesturesEnabled: false,
-            markers: markers,
-            initialCameraPosition: _kGooglePlex,
+            markers: {
+              const Marker(markerId: MarkerId("source"), position: sourceLocation),
+              const Marker(markerId: MarkerId("destination"), position: destination),
+            },
+            initialCameraPosition: const CameraPosition(target: sourceLocation, zoom: 13),
+            polylines: {
+              Polyline(
+                polylineId: PolylineId("route"),
+                points: polylineCoordinates,
+                color: Colors.blue,
+                width: 6,
+              )
+            },
             onMapCreated: (GoogleMapController controller) {
               myMapController = controller;
             },
@@ -94,7 +129,7 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * .5,
                     ),
-                    GestureDetector(
+                    /*GestureDetector(
                       onTap: () async {
                         Position position = await _determinePosition();
 
@@ -108,11 +143,11 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
                         setState(() {});
                       },
                       child: buildCurrentLocationIcon(),
-                    ),
+                    ),*/
                   ],
                 ),
                 const SizedBox(height: 5),
-                buildPickUpAndDropOffCard(context),
+                buildPickUpAndDropOffCard(context, myFocusNode),
                 const SizedBox(height: 10),
                 buildBottomSheet(context),
               ],
@@ -137,7 +172,7 @@ Widget buildCurrentLocationIcon() {
   );
 }
 
-Widget buildPickUpAndDropOffCard(BuildContext context) {
+Widget buildPickUpAndDropOffCard(BuildContext context, FocusNode myFocusNode) {
   return Container(
     width: MediaQuery.of(context).size.width * .95,
     height: 150,
@@ -148,17 +183,19 @@ Widget buildPickUpAndDropOffCard(BuildContext context) {
     child: Column(
       children: [
         const SizedBox(height: 10),
-        Container(
-          height: 45,
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => LocationSearchScreen()),
-              );
-            },
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LocationSearchScreen()),
+            );
+          },
+          child: Container(
+            height: 45,
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: TextFormField(
+              focusNode: myFocusNode,
+              autofocus: true,
               decoration: const InputDecoration(
                 hintText: 'Pick up from?',
                 hintStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
