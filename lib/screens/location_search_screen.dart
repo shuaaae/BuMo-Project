@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/components/network_utils.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/location_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class LocationSearchScreen extends StatefulWidget {
 }
 
 class _LocationSearchScreenState extends State<LocationSearchScreen> {
-  void placeAutocomplate(String query) {
+  void placeAutocomplate(String query) async {
     Uri uri = Uri.https(
         "maps.googleapis.com",
         'maps/api/place/autocomplete/json', //unencoded path
@@ -21,6 +22,10 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
         });
 
     //Then make GET request
+    String? response = await NetworkUtils.fetchUrl(uri);
+    if (response != null) {
+      PlaceAutocompleteResponse result = PlaceAutocompleteResponse.parse
+    }
   }
 
   @override
@@ -60,7 +65,9 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             child: Padding(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
-                onChanged: (value) {},
+                onChanged: (value) {
+                  placeAutocomplate(value);
+                },
                 textInputAction: TextInputAction.search,
                 decoration: InputDecoration(
                   hintText: "Search your location",
@@ -85,7 +92,9 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
             //CURRENT LOCATION BUTTON
             padding: const EdgeInsets.all(10),
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                placeAutocomplate("Dubai");
+              },
               icon: SvgPicture.asset(
                 "assets/icons/location.svg",
                 height: 16,
