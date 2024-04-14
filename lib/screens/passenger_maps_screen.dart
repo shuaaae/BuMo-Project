@@ -2,11 +2,9 @@ import 'package:angkas_clone_app/screens/location_search_screen.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PassengerMapsScreen extends StatefulWidget {
@@ -19,18 +17,17 @@ class PassengerMapsScreen extends StatefulWidget {
 class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
   GoogleMapController? myMapController;
   late FocusNode myFocusNode;
-  static const LatLng sourceLocation = LatLng(10.293617, 123.89755); //_pUSJRMain
-  static const LatLng destination = LatLng(10.29169, 123.86138); //_pUSJRBasak
-
-  final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
+  static const LatLng sourceLocation = LatLng(37.422131, -122.084801); //_pGooglePlex
+  static const LatLng destination = LatLng(37.334644, -122.008972); //_pApplePark
+  Set<Marker> markers = {
+    Marker(markerId: MarkerId("source"), position: sourceLocation),
+    Marker(markerId: MarkerId("destination"), position: destination),
+  };
 
   @override
   void initState() {
     super.initState();
-    getPolylinePoints();
+    getPolylinePoints(); //ilison sa pickup ug drop off location later
     myFocusNode = FocusNode();
     myFocusNode.addListener(() {
       if (myFocusNode.hasFocus) {
@@ -51,14 +48,25 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
     super.dispose();
   }
 
-  LocationData? currentLocation;
-  //FUNCTION TO GET CURRENT LOCATION
-  void getCurrentLocation() {
-    Location location = Location();
+  //FUNCTION TO GET "CURRENT POSITION" (Note: current position will be based on the emulator settings)
+  Future<Position> _determinePosition() async {
+    LocationPermission permission;
+    final hasPermission = await Permission.locationWhenInUse.serviceStatus.isEnabled;
+    permission = await Geolocator.checkPermission();
 
-    location.getLocation().then((location) {
-      currentLocation = location;
-    });
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location permission denied");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    return position;
   }
 
   List<LatLng> polylineCoordinates = [];
@@ -94,10 +102,7 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
             mapType: MapType.normal,
             zoomControlsEnabled: false,
             zoomGesturesEnabled: false,
-            markers: {
-              const Marker(markerId: MarkerId("source"), position: sourceLocation),
-              const Marker(markerId: MarkerId("destination"), position: destination),
-            },
+            markers: markers,
             initialCameraPosition: const CameraPosition(target: sourceLocation, zoom: 13),
             polylines: {
               Polyline(
@@ -129,21 +134,19 @@ class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
                     SizedBox(
                       width: MediaQuery.of(context).size.width * .5,
                     ),
-                    /*GestureDetector(
+                    GestureDetector(
                       onTap: () async {
                         Position position = await _determinePosition();
 
                         myMapController?.animateCamera(
                             CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(position.latitude, position.longitude), zoom: 14)));
 
-                        markers.clear();
-
+                        //markers.clear();
                         markers.add(Marker(markerId: const MarkerId('currentLocation'), position: LatLng(position.latitude, position.longitude)));
-
                         setState(() {});
                       },
                       child: buildCurrentLocationIcon(),
-                    ),*/
+                    ),
                   ],
                 ),
                 const SizedBox(height: 5),
