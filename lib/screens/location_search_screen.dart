@@ -15,7 +15,8 @@ class LocationSearchScreen extends StatefulWidget {
 }
 
 class _LocationSearchScreenState extends State<LocationSearchScreen> {
-  List<AutocompletePrediction> placePredictions = []; //List for search locations
+  List<AutocompletePrediction> placePredictions =
+      []; //List for search locations
 
   void placeAutocomplate(String query) async {
     Uri uri = Uri.https(
@@ -29,7 +30,8 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
     //Then make GET request
     String? response = await NetworkUtils.fetchUrl(uri);
     if (response != null) {
-      PlaceAutocompleteResponse result = PlaceAutocompleteResponse.parseAutocompleteResult(response);
+      PlaceAutocompleteResponse result =
+          PlaceAutocompleteResponse.parseAutocompleteResult(response);
       if (result.predictions != null) {
         setState(() {
           placePredictions = result.predictions!;
@@ -88,7 +90,7 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
                 backgroundColor: Colors.grey,
                 foregroundColor: Colors.black,
                 elevation: 0,
-                fixedSize: const Size(double.infinity, 40),
+                fixedSize: const Size(double.infinity, 50),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),

@@ -13,7 +13,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
+  FirebaseFirestore.instance.settings =
+      const Settings(persistenceEnabled: true);
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Angkas Clone App', debugShowCheckedModeBanner: false, theme: AppTheme.lightTheme, home: PassengerMapsScreen());
+    return MaterialApp(
+        title: 'Angkas Clone App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        home: PassengerMapsScreen());
   }
 }
