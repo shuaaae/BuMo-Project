@@ -1,0 +1,344 @@
+import 'package:angkas_clone_app/screens/location_search_screen.dart';
+import 'package:angkas_clone_app/utils/constants/api_keys.dart';
+import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+class PassengerMapsScreen extends StatefulWidget {
+  const PassengerMapsScreen({super.key});
+
+  @override
+  State<PassengerMapsScreen> createState() => _PassengerMapsScreenState();
+}
+
+class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
+  GoogleMapController? myMapController;
+  late FocusNode myFocusNode;
+  static const LatLng sourceLocation =
+      LatLng(37.422131, -122.084801); //_pGooglePlex
+  static const LatLng destination =
+      LatLng(37.334644, -122.008972); //_pApplePark
+  Set<Marker> markers = {
+    const Marker(markerId: MarkerId("source"), position: sourceLocation),
+    const Marker(markerId: MarkerId("destination"), position: destination),
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    getPolylinePoints(); //ilison sa pickup ug drop off location later
+    myFocusNode = FocusNode();
+    myFocusNode.addListener(() {
+      if (myFocusNode.hasFocus) {
+        // Remove focus from the TextField
+        myFocusNode.unfocus();
+        // Navigate to the new screen
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LocationSearchScreen()),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    myFocusNode.dispose();
+    super.dispose();
+  }
+
+  //FUNCTION TO GET "CURRENT POSITION" (Note: current position will be based on the emulator settings)
+  Future<Position> _determinePosition() async {
+    LocationPermission permission;
+    final hasPermission =
+        await Permission.locationWhenInUse.serviceStatus.isEnabled;
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location permission denied");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied');
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
+
+  List<LatLng> polylineCoordinates = [];
+  //FUNCTION TO CREATE POLYLINE POINTS FROM SOURCE TO DESTINATION LOCATIONS SET IN Markers()
+  void getPolylinePoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      APIKeys.googleMaps,
+      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
+      PointLatLng(destination.latitude, destination.longitude),
+    );
+
+    if (result.points.isNotEmpty) {
+      result.points.forEach(
+        (PointLatLng point) => polylineCoordinates.add(
+          LatLng(
+            point.latitude,
+            point.longitude,
+          ),
+        ),
+      );
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: GoogleMap(
+              mapType: MapType.normal,
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: false,
+              markers: markers,
+              initialCameraPosition:
+                  const CameraPosition(target: sourceLocation, zoom: 13),
+              polylines: {
+                Polyline(
+                  polylineId: const PolylineId("route"),
+                  points: polylineCoordinates,
+                  color: Colors.blue,
+                  width: 6,
+                )
+              },
+              onMapCreated: (GoogleMapController controller) {
+                myMapController = controller;
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.15),
+                                  spreadRadius: 5,
+                                  blurRadius: 10)
+                            ],
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text('REMINDERS',
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          Position position = await _determinePosition();
+
+                          myMapController?.animateCamera(
+                              CameraUpdate.newCameraPosition(CameraPosition(
+                                  target: LatLng(
+                                      position.latitude, position.longitude),
+                                  zoom: 14)));
+
+                          //markers.clear();
+                          markers.add(Marker(
+                              markerId: const MarkerId('currentLocation'),
+                              position: LatLng(
+                                  position.latitude, position.longitude)));
+                          setState(() {});
+                        },
+                        child: buildCurrentLocationIcon(),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                buildPickUpAndDropOffCard(context, myFocusNode),
+                const SizedBox(height: 10),
+                buildBottomSheet(context),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+Widget buildCurrentLocationIcon() {
+  return const PhysicalModel(
+    color: Colors.black,
+    elevation: 10.0,
+    shape: BoxShape.circle,
+    child: CircleAvatar(
+      radius: 18,
+      backgroundColor: Colors.white,
+      child: Icon(Icons.my_location, color: Color.fromARGB(255, 25, 90, 158)),
+    ),
+  );
+}
+
+Widget buildPickUpAndDropOffCard(BuildContext context, FocusNode myFocusNode) {
+  return Container(
+    width: MediaQuery.of(context).size.width * .95,
+    height: 150,
+    decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 5,
+              blurRadius: 10)
+        ],
+        borderRadius: BorderRadius.circular(16)),
+    child: Column(
+      children: [
+        const SizedBox(height: 10),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const LocationSearchScreen()),
+            );
+          },
+          child: Container(
+            height: 45,
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: TextFormField(
+              focusNode: myFocusNode,
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'Pick up from?',
+                hintStyle:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+                prefixIcon: Icon(
+                  Icons.adjust,
+                  color: Colors.blue,
+                ),
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          height: 45,
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          child: TextFormField(
+            decoration: const InputDecoration(
+              hintText: 'Drop off to?',
+              hintStyle:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
+              prefixIcon: Icon(
+                Icons.location_on,
+                color: Color.fromARGB(255, 255, 102, 0),
+              ),
+              border: InputBorder.none,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const CustomSelectionWidget(
+                  image: 'assets/images/helmet.png', text: ' Cash'),
+              Container(
+                height: 15.0,
+                width: 2.0,
+                color: const Color.fromARGB(77, 29, 28, 28),
+                padding: const EdgeInsets.only(right: 3.0),
+              ),
+              const CustomSelectionWidget(
+                  image: 'assets/images/helmet.png', text: ' Promo'),
+              Container(
+                height: 15.0,
+                width: 2.0,
+                color: const Color.fromARGB(77, 29, 28, 28),
+                padding: const EdgeInsets.only(right: 3.0),
+              ),
+              const CustomSelectionWidget(
+                  image: 'assets/images/helmet.png', text: ' Notes'),
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
+Widget buildBottomSheet(BuildContext context) {
+  final calculatedFare = 100.00;
+  final serviceType = 'Passenger';
+  final duration = '2-10 min(s)';
+
+  return Container(
+    padding: const EdgeInsets.fromLTRB(15, 16, 15, 20),
+    width: MediaQuery.of(context).size.width,
+    decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 5,
+              blurRadius: 10)
+        ],
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(25), topLeft: Radius.circular(25))),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Image.asset(
+                  'assets/images/helmet.png',
+                  height: 20,
+                ),
+                Text('  $serviceType  ',
+                    style: Theme.of(context).textTheme.titleSmall),
+                const Icon(Icons.arrow_forward_ios_rounded, size: 12)
+              ],
+            ), //Add 1.Leading icon & 2.Action button
+            Text(duration),
+            Text('P $calculatedFare',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge), //use diff fontfamily for Peso sign
+          ],
+        ),
+        const SizedBox(height: 15),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: ElevatedButton(
+            onPressed: () {},
+            child: const Text('Book'),
+          ),
+        )
+      ],
+    ),
+  );
+}
