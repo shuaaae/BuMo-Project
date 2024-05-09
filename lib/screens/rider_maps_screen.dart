@@ -2,20 +2,19 @@ import 'package:angkas_clone_app/screens/location_search_screen.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class PassengerMapsScreen extends StatefulWidget {
-  const PassengerMapsScreen({super.key});
+class RiderMapsScreen extends StatefulWidget {
+  const RiderMapsScreen({super.key});
 
   @override
-  State<PassengerMapsScreen> createState() => _PassengerMapsScreenState();
+  State<RiderMapsScreen> createState() => _RiderMapsScreenState();
 }
 
-class _PassengerMapsScreenState extends State<PassengerMapsScreen> {
+class _RiderMapsScreenState extends State<RiderMapsScreen> {
   GoogleMapController? myMapController;
   late FocusNode myFocusNode;
   static const LatLng sourceLocation =
