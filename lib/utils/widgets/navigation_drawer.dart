@@ -1,5 +1,5 @@
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:angkas_clone_app/screens/rider-side/rider_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,7 +16,7 @@ class CustomNavigationDrawer extends ConsumerWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('assets/images/sidebar_header.png'),
                     fit: BoxFit.cover)),
@@ -35,7 +35,7 @@ class CustomNavigationDrawer extends ConsumerWidget {
                       height: 80,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Row(
@@ -47,10 +47,10 @@ class CustomNavigationDrawer extends ConsumerWidget {
                             .bodyMedium!
                             .copyWith(fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios,
                         size: 15,
                       )
@@ -61,35 +61,38 @@ class CustomNavigationDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.history),
+            leading: const Icon(Icons.history),
             title: const Text('History'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const PassengerHistoryScreen()));
             },
           ),
           ListTile(
-            leading: Icon(Icons.bookmark_border_outlined),
+            leading: const Icon(Icons.bookmark_border_outlined),
             title: const Text('Saved Places'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Icons.payment_outlined),
+            leading: const Icon(Icons.payment_outlined),
             title: const Text('Payment Options'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Icons.headset_mic_outlined),
+            leading: const Icon(Icons.headset_mic_outlined),
             title: const Text('Support'),
             onTap: () {
               Navigator.pop(context);
             },
           ),
           ListTile(
-            leading: Icon(Icons.chat_bubble_outline),
+            leading: const Icon(Icons.chat_bubble_outline),
             title: const Text('Feedback'),
             onTap: () {
               Navigator.pop(context);

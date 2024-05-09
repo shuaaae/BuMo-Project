@@ -1,5 +1,5 @@
 import 'package:angkas_clone_app/providers/account_provider.dart';
-import 'package:angkas_clone_app/screens/registration/passenger_details.dart';
+import 'package:angkas_clone_app/screens/registration/rider_details.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:angkas_clone_app/utils/widgets/custom_selection_dialog.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -73,7 +73,7 @@ class VerificationScreen extends ConsumerWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            PassengerDetailsScreen(
+                                            RiderDetailsScreen(
                                                 phoneNumber: phoneNumber!)));
                               } else if (role == "driver") {}
                             });

@@ -1,11 +1,10 @@
-import 'package:angkas_clone_app/screens/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class PassengerDetailsScreen extends ConsumerWidget {
-  const PassengerDetailsScreen({super.key, required this.phoneNumber});
+class RiderDetailsScreen extends ConsumerWidget {
+  const RiderDetailsScreen({super.key, required this.phoneNumber});
   final String phoneNumber;
 
   @override
@@ -93,9 +92,9 @@ class PassengerDetailsScreen extends ConsumerWidget {
         ),
         onTap: () async {
           try {
-            final accountNotifer = ref.watch(accountProvider.notifier);
+            final accountNotifier = ref.watch(accountProvider.notifier);
 
-            accountNotifer.updateAccount(
+            accountNotifier.updateAccount(
                 phoneNumber: phoneNumber,
                 firstName: firstNameController.text,
                 middleName: middleNameController.text.isEmpty
@@ -106,12 +105,10 @@ class PassengerDetailsScreen extends ConsumerWidget {
                 weight: null,
                 userType: 'driver');
 
-            await accountNotifer.registerAccount();
+            // await accountNotifier.registerAccount();
 
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
-                "Passenger Account Successfully created.", true, context));
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MapPage()));
+                "Rider Account Successfully created.", true, context));
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Something went wrong with Creating the Account.",
