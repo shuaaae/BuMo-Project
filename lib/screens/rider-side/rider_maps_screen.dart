@@ -1,6 +1,7 @@
 import 'package:angkas_clone_app/screens/map-utils/location_search_screen.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
-import 'package:angkas_clone_app/widgets/custom_selection_widget.dart';
+import 'package:angkas_clone_app/utils/widgets/custom_selection_widget.dart';
+import 'package:angkas_clone_app/utils/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -194,6 +195,27 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
           ),
         ],
       ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: Builder(
+          builder: (context) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
+            ),
+          ),
+        ),
+      ),
+      extendBodyBehindAppBar: true,
+      drawer: CustomNavigationDrawer(),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:angkas_clone_app/components/network_utils.dart';
 import 'package:angkas_clone_app/models/autocomplate_prediction.dart';
 import 'package:angkas_clone_app/models/place_auto_complate_response.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
-import 'package:angkas_clone_app/widgets/location_list_tile.dart';
+import 'package:angkas_clone_app/utils/widgets/location_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
