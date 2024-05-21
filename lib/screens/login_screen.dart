@@ -1,4 +1,4 @@
-import 'package:angkas_clone_app/screens/map_screen.dart';
+import 'package:angkas_clone_app/screens/map-utils/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

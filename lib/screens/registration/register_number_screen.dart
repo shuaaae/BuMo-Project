@@ -76,6 +76,7 @@ class SignUpScreen extends ConsumerWidget {
                 width: 30,
               ),
               InkWell(
+                borderRadius: BorderRadius.circular(25),
                 child: Container(
                   height: 50,
                   width: 50,
@@ -101,8 +102,8 @@ class SignUpScreen extends ConsumerWidget {
                             builder: (context) => VerificationScreen(
                                 verificationID: "sad",
                                 phoneNumber: inputtedNumber.phoneNumber)));
-                    // },
-                    // codeAutoRetrievalTimeout: (String verificationId) {},
+                    //   },
+                    //   codeAutoRetrievalTimeout: (String verificationId) {},
                     // );
                   } catch (error) {
                     print(error);

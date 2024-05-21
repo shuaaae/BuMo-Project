@@ -1,6 +1,6 @@
 import 'package:angkas_clone_app/models/driver_account.dart';
 import 'package:angkas_clone_app/providers/account_provider.dart';
-import 'package:angkas_clone_app/screens/map_screen.dart';
+import 'package:angkas_clone_app/screens/map-utils/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';

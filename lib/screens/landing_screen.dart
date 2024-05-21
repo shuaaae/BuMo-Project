@@ -1,4 +1,4 @@
-import 'package:angkas_clone_app/providers/auth_provider.dart';
+import 'package:angkas_clone_app/screens/on-boarding_screen.dart';
 import 'package:angkas_clone_app/utils/effects/fade_page_route.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +12,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(FadePageRoute(page: AuthCheck()));
+      Navigator.of(context).pushReplacement(FadePageRoute(page: OnBoarding()));
     });
   }
 
