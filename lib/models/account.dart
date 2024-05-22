@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Account {
+  String? userID;
   String? phoneNumber;
   String? firstName;
   String? middleName;
@@ -9,17 +10,20 @@ class Account {
   double? weight;
   String? userType;
 
-  Account(
-      {this.phoneNumber,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.sex,
-      this.weight,
-      this.userType});
+  Account({
+    this.userID,
+    this.phoneNumber,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.sex,
+    this.weight,
+    this.userType,
+  });
 
   Map<String, dynamic> toMap() {
     return {
+      'userID': userID,
       'phoneNumber': phoneNumber,
       'firstName': firstName,
       'middleName': middleName,
@@ -30,15 +34,17 @@ class Account {
     };
   }
 
-  factory Account.fromSnapShot(DocumentSnapshot snapshot) {
+  factory Account.fromSnapshot(DocumentSnapshot snapshot) {
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
     return Account(
-        phoneNumber: data['phoneNumber'],
-        firstName: data['firstName'],
-        middleName: data['middleName'],
-        lastName: data['lastName'],
-        sex: data['sex'],
-        weight: data['weight'],
-        userType: data['userType']);
+      userID: snapshot.id,
+      phoneNumber: data['phoneNumber'],
+      firstName: data['firstName'],
+      middleName: data['middleName'],
+      lastName: data['lastName'],
+      sex: data['sex'],
+      weight: data['weight'],
+      userType: data['userType'],
+    );
   }
 }

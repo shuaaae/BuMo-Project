@@ -1,8 +1,14 @@
+import 'package:angkas_clone_app/models/rider_account.dart';
+import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:angkas_clone_app/screens/rider-side/rider_maps_screen.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final riderAccountProvider =
+    StateNotifierProvider<RiderAccountNotifier, RiderAccount>(
+        (ref) => RiderAccountNotifier());
 
 class RiderDetailsScreen extends ConsumerWidget {
   const RiderDetailsScreen({super.key, required this.phoneNumber});
@@ -94,6 +100,8 @@ class RiderDetailsScreen extends ConsumerWidget {
         onTap: () async {
           try {
             final accountNotifier = ref.watch(accountProvider.notifier);
+            final riderAccountNotifier =
+                ref.watch(riderAccountProvider.notifier);
 
             accountNotifier.updateAccount(
                 phoneNumber: phoneNumber,
@@ -104,9 +112,10 @@ class RiderDetailsScreen extends ConsumerWidget {
                 lastName: lastNameController.text,
                 sex: null,
                 weight: null,
-                userType: 'driver');
+                userType: 'rider');
 
-            // await accountNotifier.registerAccount();
+            String? accountID = await accountNotifier.registerAccount();
+            riderAccountNotifier.registerRiderAccount(accountID);
 
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Rider Account Successfully created.", true, context));

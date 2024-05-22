@@ -218,54 +218,40 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   ),
                   child: Column(
                     children: [
-                      const SizedBox(height: 10),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LocationSearchScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 45,
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: AbsorbPointer(
-                            child: TextFormField(
-                              readOnly: true,
-                              decoration: const InputDecoration(
-                                hintText: 'Pick up from?',
-                                hintStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.grey),
-                                prefixIcon: Icon(
-                                  Icons.adjust,
-                                  color: Colors.blue,
-                                ),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 45,
-                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      AbsorbPointer(
                         child: TextFormField(
                           readOnly: true,
+                          maxLines: null,
                           decoration: const InputDecoration(
-                            hintText: 'Drop off to?',
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            hintText: 'Pick up from?',
                             hintStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                             prefixIcon: Icon(
-                              Icons.location_on,
-                              color: Color.fromARGB(255, 255, 102, 0),
+                              Icons.adjust,
+                              color: Colors.blue,
                             ),
                             border: InputBorder.none,
                           ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        readOnly: true,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          hintText: 'Drop off to?',
+                          hintStyle: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey),
+                          prefixIcon: Icon(
+                            Icons.location_on,
+                            color: Color.fromARGB(255, 255, 102, 0),
+                          ),
+                          border: InputBorder.none,
                         ),
                       ),
                       const SizedBox(height: 10),

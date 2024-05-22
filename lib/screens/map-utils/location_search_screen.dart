@@ -26,13 +26,6 @@ class _LocationSearchScreenState extends State<LocationSearchScreen> {
 
   bool isPickupFocused = true;
 
-  @override
-  void initState() {
-    super.initState();
-    pickupController.text = context.read(pickupTextProvider).state;
-    destinationController.text = context.read(destinationTextProvider).state;
-  }
-
   void placeAutocomplete(String query, bool isPickup) async {
     Uri uri = Uri.https(
         "maps.googleapis.com",
