@@ -17,40 +17,16 @@ class RiderMapsScreen extends StatefulWidget {
 
 class _RiderMapsScreenState extends State<RiderMapsScreen> {
   GoogleMapController? myMapController;
-  late FocusNode myFocusNode;
-  static const LatLng sourceLocation =
-      LatLng(37.422131, -122.084801); //_pGooglePlex
-  static const LatLng destination =
-      LatLng(37.334644, -122.008972); //_pApplePark
-  Set<Marker> markers = {
-    const Marker(markerId: MarkerId("source"), position: sourceLocation),
-    const Marker(markerId: MarkerId("destination"), position: destination),
-  };
-
+  bool isSettingSource = true;
+  LatLng? sourceLocation;
+  LatLng? destination;
+  Set<Marker> markers = {};
   List<LatLng> polylineCoordinates = [];
 
   @override
   void initState() {
     super.initState();
     getPolylinePoints();
-    myFocusNode = FocusNode();
-    myFocusNode.addListener(() {
-      if (myFocusNode.hasFocus) {
-        // Remove focus from the TextField
-        myFocusNode.unfocus();
-        // Navigate to the new screen
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LocationSearchScreen()),
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    myFocusNode.dispose();
-    super.dispose();
   }
 
   Future<Position> _determinePosition() async {
@@ -79,20 +55,38 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
   }
 
   void getPolylinePoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
+    if (sourceLocation == null || destination == null) return;
 
+    PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       APIKeys.googleMaps,
-      PointLatLng(sourceLocation.latitude, sourceLocation.longitude),
-      PointLatLng(destination.latitude, destination.longitude),
+      PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
+      PointLatLng(destination!.latitude, destination!.longitude),
     );
 
     if (result.points.isNotEmpty) {
+      polylineCoordinates.clear();
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
       setState(() {});
     }
+  }
+
+  void _onMapTapped(LatLng position) {
+    setState(() {
+      if (isSettingSource) {
+        sourceLocation = position;
+        markers.add(
+            Marker(markerId: const MarkerId('source'), position: position));
+      } else {
+        destination = position;
+        markers.add(Marker(
+            markerId: const MarkerId('destination'), position: position));
+        getPolylinePoints();
+      }
+      isSettingSource = !isSettingSource;
+    });
   }
 
   @override
@@ -114,7 +108,10 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   zoomGesturesEnabled: true,
                   markers: markers,
                   initialCameraPosition: CameraPosition(
-                    target: sourceLocation,
+                    target: snapshot.data == null
+                        ? LatLng(37.422131, -122.084801)
+                        : LatLng(
+                            snapshot.data!.latitude, snapshot.data!.longitude),
                     zoom: 13,
                   ),
                   polylines: {
@@ -128,6 +125,7 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   onMapCreated: (GoogleMapController controller) {
                     myMapController = controller;
                   },
+                  onTap: _onMapTapped,
                 );
               }
             },
@@ -187,7 +185,7 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                buildPickUpAndDropOffCard(context, myFocusNode),
+                buildPickUpAndDropOffCard(context),
                 const SizedBox(height: 10),
                 buildBottomSheet(context),
               ],
@@ -215,7 +213,7 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
         ),
       ),
       extendBodyBehindAppBar: true,
-      drawer: CustomNavigationDrawer(),
+      drawer: const CustomNavigationDrawer(),
     );
   }
 }
@@ -233,7 +231,7 @@ Widget buildCurrentLocationIcon() {
   );
 }
 
-Widget buildPickUpAndDropOffCard(BuildContext context, FocusNode myFocusNode) {
+Widget buildPickUpAndDropOffCard(BuildContext context) {
   return Container(
     width: MediaQuery.of(context).size.width * .95,
     height: 150,
@@ -263,18 +261,19 @@ Widget buildPickUpAndDropOffCard(BuildContext context, FocusNode myFocusNode) {
           child: Container(
             height: 45,
             padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: TextFormField(
-              focusNode: myFocusNode,
-              autofocus: true,
-              decoration: const InputDecoration(
-                hintText: 'Pick up from?',
-                hintStyle:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.grey),
-                prefixIcon: Icon(
-                  Icons.adjust,
-                  color: Colors.blue,
+            child: AbsorbPointer(
+              child: TextFormField(
+                readOnly: true,
+                decoration: const InputDecoration(
+                  hintText: 'Pick up from?',
+                  hintStyle: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.grey),
+                  prefixIcon: Icon(
+                    Icons.adjust,
+                    color: Colors.blue,
+                  ),
+                  border: InputBorder.none,
                 ),
-                border: InputBorder.none,
               ),
             ),
           ),
@@ -284,6 +283,7 @@ Widget buildPickUpAndDropOffCard(BuildContext context, FocusNode myFocusNode) {
           height: 45,
           padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: TextFormField(
+            readOnly: true,
             decoration: const InputDecoration(
               hintText: 'Drop off to?',
               hintStyle:

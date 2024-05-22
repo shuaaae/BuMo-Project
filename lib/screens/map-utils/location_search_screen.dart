@@ -1,6 +1,6 @@
 import 'package:angkas_clone_app/components/network_utils.dart';
-import 'package:angkas_clone_app/models/autocomplate_prediction.dart';
-import 'package:angkas_clone_app/models/place_auto_complate_response.dart';
+import 'package:angkas_clone_app/models/autocomplete_prediction.dart';
+import 'package:angkas_clone_app/models/place_auto_complete_response.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/utils/widgets/location_list_tile.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'autocomplate_prediction.dart';
+import 'autocomplete_prediction.dart';
 
 /// The Autocomplete response contains place predictions and status
 class PlaceAutocompleteResponse {
@@ -13,12 +13,16 @@ class PlaceAutocompleteResponse {
     return PlaceAutocompleteResponse(
       status: json['status'] as String?,
       predictions: json['predictions'] != null
-          ? json['predictions'].map<AutocompletePrediction>((json) => AutocompletePrediction.fromJson(json)).toList()
+          ? json['predictions']
+              .map<AutocompletePrediction>(
+                  (json) => AutocompletePrediction.fromJson(json))
+              .toList()
           : null,
     );
   }
 
-  static PlaceAutocompleteResponse parseAutocompleteResult(String responseBody) {
+  static PlaceAutocompleteResponse parseAutocompleteResult(
+      String responseBody) {
     final parsed = json.decode(responseBody).cast<String, dynamic>();
 
     return PlaceAutocompleteResponse.fromJson(parsed);
