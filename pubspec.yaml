@@ -60,6 +60,7 @@ dependencies:
   # O T H E R  D E P E N D E N C I E S
   intl_phone_number_input: ^0.7.4
   flutter_otp_text_field: ^1.1.2+1
+  geocoding: ^3.0.0
   
 
 dev_dependencies:

@@ -15,20 +15,21 @@ class LocationListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 5,
+        ),
         ListTile(
           onTap: press,
           horizontalTitleGap: 0,
-          leading: SvgPicture.asset("assets/icons/location_pin.svg"),
+          trailing: Icon(Icons.bookmark_add_outlined),
           title: Text(
             location,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        const Divider(
-          height: 2,
-          thickness: 2,
-          color: Colors.grey,
+        SizedBox(
+          height: 5,
         ),
       ],
     );
