@@ -1,20 +1,17 @@
-import 'package:angkas_clone_app/screens/map-utils/location_search_screen.dart';
+import 'package:angkas_clone_app/providers/booking_provider.dart';
+import 'package:angkas_clone_app/screens/rider-side/location_search_screen.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/utils/widgets/custom_selection_widget.dart';
 import 'package:angkas_clone_app/utils/widgets/rider-widgets/navigation_drawer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-class RiderMapsScreen extends StatefulWidget {
-  const RiderMapsScreen({super.key});
-
-  @override
-  State<RiderMapsScreen> createState() => _RiderMapsScreenState();
-}
-
-class _RiderMapsScreenState extends State<RiderMapsScreen> {
+class RiderMapsScreen extends ConsumerWidget {
   GoogleMapController? myMapController;
   bool isSettingSource = true;
   LatLng? sourceLocation;
@@ -27,11 +24,6 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
   final duration = '2-10 min(s)';
 
   @override
-  void initState() {
-    super.initState();
-    getPolylinePoints();
-  }
-
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -72,33 +64,45 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
       result.points.forEach((PointLatLng point) {
         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
       });
-      setState(() {});
     }
   }
 
-  // void _onMapTapped(LatLng position) async {
-  //   try {
-  //     List<Placemark> placemarks = await placemarkFromCoordinates(
-  //       position.latitude,
-  //       position.longitude,
-  //     );
-  //     if (placemarks != null && placemarks.isNotEmpty) {
-  //       Placemark placemark = placemarks.first;
-  //       String address =
-  //           '${placemark.name}, ${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
-  //       print('Address: $address');
-  //       // Now you can use the address as needed
-  //     } else {
-  //       print('No address found for the tapped coordinate');
-  //     }
-  //   } catch (e) {
-  //     print('Error fetching placemarks: $e');
-  //   }
-  // }
+  RiderMapsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final bookingState = ref.watch(bookingProvider);
+    final pickupName = bookingState?.pickupLocation?.name;
+    final destinationName = bookingState?.destinationLocation?.name;
+
+    final pickupController = TextEditingController(text: pickupName);
+    final destinationController = TextEditingController(text: destinationName);
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: Builder(
+          builder: (context) => Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Center(
+                child: IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Theme.of(context).primaryColor,
+                    size: 20,
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      extendBodyBehindAppBar: true,
+      drawer: const CustomNavigationDrawer(),
       body: Stack(
         children: [
           FutureBuilder(
@@ -117,21 +121,21 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
                         snapshot.data!.latitude, snapshot.data!.longitude),
-                    zoom: 15,
+                    zoom: 16,
                   ),
-                  polylines: {
-                    Polyline(
-                      polylineId: const PolylineId("route"),
-                      points: polylineCoordinates,
-                      color: Colors.blue,
-                      width: 6,
-                    ),
-                  },
+                  // polylines: {
+                  //   Polyline(
+                  //     polylineId: const PolylineId("route"),
+                  //     points: polylineCoordinates,
+                  //     color: Colors.blue,
+                  //     width: 6,
+                  //   ),
+                  // },
                   onMapCreated: (GoogleMapController controller) {
                     myMapController = controller;
                   },
                   myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
+                  myLocationButtonEnabled: false,
                   // onTap: _onMapTapped,
                 );
               }
@@ -172,19 +176,10 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                               CameraPosition(
                                 target: LatLng(
                                     position.latitude, position.longitude),
-                                zoom: 14,
+                                zoom: 16,
                               ),
                             ),
                           );
-
-                          markers.add(
-                            Marker(
-                              markerId: const MarkerId('currentLocation'),
-                              position:
-                                  LatLng(position.latitude, position.longitude),
-                            ),
-                          );
-                          setState(() {});
                         },
                         child: PhysicalModel(
                           color: Colors.black,
@@ -218,40 +213,60 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
                   ),
                   child: Column(
                     children: [
-                      AbsorbPointer(
-                        child: TextFormField(
-                          readOnly: true,
-                          maxLines: null,
-                          decoration: const InputDecoration(
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            hintText: 'Pick up from?',
-                            hintStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                            prefixIcon: Icon(
-                              Icons.adjust,
-                              color: Colors.blue,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LocationSearchScreen()));
+                        },
+                        child: Column(
+                          children: [
+                            AbsorbPointer(
+                              child: TextFormField(
+                                controller: pickupController,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                readOnly: true,
+                                maxLines: null,
+                                decoration: const InputDecoration(
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: 'Pick up from?',
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                  prefixIcon: Icon(
+                                    Icons.adjust,
+                                    color: Colors.blue,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
                             ),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      TextFormField(
-                        readOnly: true,
-                        maxLines: null,
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                          focusedBorder: InputBorder.none,
-                          hintText: 'Drop off to?',
-                          hintStyle: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.grey),
-                          prefixIcon: Icon(
-                            Icons.location_on,
-                            color: Color.fromARGB(255, 255, 102, 0),
-                          ),
-                          border: InputBorder.none,
+                            const SizedBox(height: 10),
+                            AbsorbPointer(
+                              child: TextFormField(
+                                controller: destinationController,
+                                readOnly: true,
+                                maxLines: null,
+                                style: Theme.of(context).textTheme.bodySmall,
+                                decoration: const InputDecoration(
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: 'Drop off to?',
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey),
+                                  prefixIcon: Icon(
+                                    Icons.location_on,
+                                    color: Color.fromARGB(255, 255, 102, 0),
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -350,30 +365,6 @@ class _RiderMapsScreenState extends State<RiderMapsScreen> {
           ),
         ],
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: Builder(
-          builder: (context) => Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(25)),
-              child: Center(
-                child: IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Theme.of(context).primaryColor,
-                    size: 20,
-                  ),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      extendBodyBehindAppBar: true,
-      drawer: const CustomNavigationDrawer(),
     );
   }
 }
