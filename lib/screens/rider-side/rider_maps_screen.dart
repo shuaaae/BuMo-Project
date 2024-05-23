@@ -1,5 +1,5 @@
 import 'package:angkas_clone_app/providers/booking_provider.dart';
-import 'package:angkas_clone_app/utils/functions/map_helpers.dart'; // Import the new helper file
+import 'package:angkas_clone_app/utils/functions/map_helpers.dart';
 import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/navigation_drawer.dart';
 import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/rider-map-widgets/booking_details_widget.dart';
 import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/rider-map-widgets/booking_sheet_widget.dart';
@@ -95,7 +95,6 @@ class RiderMapsScreen extends ConsumerWidget {
 
                     polylines.clear();
 
-                    // Call the method after the map is created and the controller is ready
                     if (pickupLocation != null && destinationLocation != null) {
                       moveCameraToLocations(
                           context,
@@ -124,9 +123,15 @@ class RiderMapsScreen extends ConsumerWidget {
                     destinationController: destinationController),
                 const SizedBox(height: 10),
                 BookingSheetWidget(
-                    serviceType: serviceType,
-                    duration: duration,
-                    calculatedFare: calculatedFare),
+                  serviceType: serviceType,
+                  duration: duration,
+                  calculatedFare: calculatedFare,
+                  isButtonEnabled:
+                      pickupLocation != null && destinationLocation != null,
+                  markers: markers,
+                  polylines: polylines,
+                  destination: destinationLocation,
+                ),
               ],
             ),
           ),
