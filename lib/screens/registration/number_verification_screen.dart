@@ -48,11 +48,11 @@ class VerificationScreen extends ConsumerWidget {
                     try {
                       final accountNotifer = ref.read(accountProvider.notifier);
 
-                      // PhoneAuthCredential credential =
-                      //     PhoneAuthProvider.credential(
-                      //         verificationId: verificationID!,
-                      //         smsCode: verificationCode);
-                      // await auth.signInWithCredential(credential);
+                      PhoneAuthCredential credential =
+                          PhoneAuthProvider.credential(
+                              verificationId: verificationID!,
+                              smsCode: verificationCode);
+                      await auth.signInWithCredential(credential);
 
                       accountNotifer.updateAccount(
                         phoneNumber: phoneNumber,
@@ -65,6 +65,7 @@ class VerificationScreen extends ConsumerWidget {
                       );
 
                       showDialog(
+                          // ignore: use_build_context_synchronously
                           context: context,
                           builder: (context) {
                             return CustomSelectionDialog(onSelection: (role) {

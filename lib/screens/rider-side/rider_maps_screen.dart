@@ -1,10 +1,10 @@
 import 'package:angkas_clone_app/providers/booking_provider.dart';
-import 'package:angkas_clone_app/screens/map-utils/map_helpers.dart'; // Import the new helper file
-import 'package:angkas_clone_app/utils/widgets/rider-widgets/navigation_drawer.dart';
-import 'package:angkas_clone_app/utils/widgets/rider-widgets/rider-map-widgets/booking_details_widget.dart';
-import 'package:angkas_clone_app/utils/widgets/rider-widgets/rider-map-widgets/booking_sheet_widget.dart';
-import 'package:angkas_clone_app/utils/widgets/rider-widgets/rider-map-widgets/reminders_and_current_location.dart';
-import 'package:angkas_clone_app/screens/map-utils/map_functions.dart';
+import 'package:angkas_clone_app/utils/functions/map_helpers.dart'; // Import the new helper file
+import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/navigation_drawer.dart';
+import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/rider-map-widgets/booking_details_widget.dart';
+import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/rider-map-widgets/booking_sheet_widget.dart';
+import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/rider-map-widgets/reminders_and_current_location.dart';
+import 'package:angkas_clone_app/utils/functions/map_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
