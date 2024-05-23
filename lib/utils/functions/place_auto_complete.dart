@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'package:angkas_clone_app/components/network_utils.dart';
+import 'package:angkas_clone_app/utils/functions/network_utils.dart';
 import 'package:angkas_clone_app/models/autocomplete_prediction.dart';
 import 'package:angkas_clone_app/models/place_auto_complete_response.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';

@@ -1,4 +1,4 @@
-import 'package:angkas_clone_app/screens/map-utils/map_functions.dart';
+import 'package:angkas_clone_app/utils/functions/map_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

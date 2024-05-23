@@ -1,8 +1,5 @@
-import 'package:angkas_clone_app/screens/map-utils/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -62,10 +59,10 @@ class LoginScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MapPage()));
+                            // Navigator.pushReplacement(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => MapPage()));
                           },
                           child: const Text('Sign In'))),
                   const SizedBox(height: 10),

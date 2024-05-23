@@ -1,6 +1,5 @@
 import 'package:angkas_clone_app/models/driver_account.dart';
 import 'package:angkas_clone_app/providers/account_provider.dart';
-import 'package:angkas_clone_app/screens/map-utils/map_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -166,8 +165,8 @@ class DriverDetailsScreen extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Driver Account Successfully created.", true, context));
 
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MapPage()));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => const MapPage()));
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Something went wrong with Creating the Account.",

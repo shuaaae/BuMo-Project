@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:angkas_clone_app/components/network_utils.dart';
+import 'package:angkas_clone_app/utils/functions/network_utils.dart';
 import 'package:angkas_clone_app/models/booking.dart';
 import 'package:angkas_clone_app/providers/booking_provider.dart';
 import 'package:angkas_clone_app/screens/rider-side/location_search_screen.dart';
