@@ -1,11 +1,11 @@
+import 'package:angkas_clone_app/models/booking.dart';
 import 'package:angkas_clone_app/providers/booking_provider.dart';
+import 'package:angkas_clone_app/screens/map-utils/map_functions.dart';
 import 'package:angkas_clone_app/screens/rider-side/location_search_screen.dart';
 import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/utils/widgets/custom_selection_widget.dart';
 import 'package:angkas_clone_app/utils/widgets/rider-widgets/navigation_drawer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,54 +18,11 @@ class RiderMapsScreen extends ConsumerWidget {
   LatLng? destination;
   Set<Marker> markers = {};
   List<LatLng> polylineCoordinates = [];
+  Set<Polyline> polylines = {};
 
   final calculatedFare = 100.00;
   final serviceType = 'Passenger';
   final duration = '2-10 min(s)';
-
-  @override
-  Future<Position> _determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error("Location services are disabled.");
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error("Location permission denied.");
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error("Location permissions are permanently denied.");
-    }
-
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  void getPolylinePoints() async {
-    if (sourceLocation == null || destination == null) return;
-
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      APIKeys.googleMaps,
-      PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
-      PointLatLng(destination!.latitude, destination!.longitude),
-    );
-
-    if (result.points.isNotEmpty) {
-      polylineCoordinates.clear();
-      result.points.forEach((PointLatLng point) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      });
-    }
-  }
 
   RiderMapsScreen({super.key});
 
@@ -77,6 +34,65 @@ class RiderMapsScreen extends ConsumerWidget {
 
     final pickupController = TextEditingController(text: pickupName);
     final destinationController = TextEditingController(text: destinationName);
+    final pickupLocation = bookingState?.pickupLocation;
+    final destinationLocation = bookingState?.destinationLocation;
+
+    Future<List<LatLng>> getPolylinePoints(
+        Location pickupLocation, Location destinationLocation) async {
+      PolylinePoints polylinePoints = PolylinePoints();
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        APIKeys.googleMaps,
+        PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
+        PointLatLng(
+            destinationLocation.latitude, destinationLocation.longitude),
+      );
+
+      List<LatLng> polylineCoordinates = [];
+      if (result.points.isNotEmpty) {
+        polylineCoordinates = result.points
+            .map((point) => LatLng(point.latitude, point.longitude))
+            .toList();
+      }
+      return polylineCoordinates;
+    }
+
+    markers.clear();
+
+    if (pickupLocation != null) {
+      markers.add(
+        Marker(
+          markerId: MarkerId('pickup'),
+          position: LatLng(pickupLocation.latitude, pickupLocation.longitude),
+          infoWindow: InfoWindow(title: 'Pickup'),
+        ),
+      );
+    }
+
+    if (destinationLocation != null) {
+      markers.add(
+        Marker(
+          markerId: MarkerId('destination'),
+          position: LatLng(
+              destinationLocation.latitude, destinationLocation.longitude),
+          infoWindow: InfoWindow(title: 'Destination'),
+        ),
+      );
+    }
+
+    if (pickupLocation != null && destinationLocation != null) {
+      getPolylinePoints(pickupLocation, destinationLocation).then((polyline) {
+        if (polyline.isNotEmpty) {
+          polylines.add(
+            Polyline(
+              polylineId: PolylineId('route'),
+              points: polyline,
+              color: Colors.blue,
+              width: 6,
+            ),
+          );
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -106,7 +122,7 @@ class RiderMapsScreen extends ConsumerWidget {
       body: Stack(
         children: [
           FutureBuilder(
-            future: _determinePosition(),
+            future: determinePosition(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -123,14 +139,7 @@ class RiderMapsScreen extends ConsumerWidget {
                         snapshot.data!.latitude, snapshot.data!.longitude),
                     zoom: 16,
                   ),
-                  // polylines: {
-                  //   Polyline(
-                  //     polylineId: const PolylineId("route"),
-                  //     points: polylineCoordinates,
-                  //     color: Colors.blue,
-                  //     width: 6,
-                  //   ),
-                  // },
+                  polylines: polylines,
                   onMapCreated: (GoogleMapController controller) {
                     myMapController = controller;
                   },
@@ -169,7 +178,7 @@ class RiderMapsScreen extends ConsumerWidget {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          Position position = await _determinePosition();
+                          Position position = await determinePosition();
 
                           myMapController?.animateCamera(
                             CameraUpdate.newCameraPosition(

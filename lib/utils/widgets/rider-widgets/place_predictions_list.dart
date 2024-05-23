@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlacePredictionsList extends ConsumerWidget {
-  PlacePredictionsList({
-    Key? key,
+  const PlacePredictionsList({
+    super.key,
     required this.pickupController,
     required this.destinationController,
-  }) : super(key: key);
+  });
 
   final TextEditingController pickupController;
   final TextEditingController destinationController;
@@ -33,8 +33,6 @@ class PlacePredictionsList extends ConsumerWidget {
             String placeId = placePredictions[index].placeId!;
             Map<String, dynamic>? placeDetails =
                 await fetchPlaceDetails(placeId);
-
-            final bookingNotifier = ref.read(bookingProvider);
 
             if (placeDetails != null) {
               String address = placeDetails['formatted_address'];
