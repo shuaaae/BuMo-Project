@@ -1,3 +1,4 @@
+import 'package:angkas_clone_app/screens/messaging/inbox_screen.dart';
 import 'package:angkas_clone_app/screens/registration/number_verification_screen.dart';
 import 'package:angkas_clone_app/screens/rider-side/rider_history_screen.dart';
 import 'package:flutter/material.dart';
@@ -93,9 +94,10 @@ class CustomNavigationDrawer extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.chat_bubble_outline),
-            title: const Text('Feedback'),
+            title: const Text('Inbox'),
             onTap: () {
-              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const InboxScreen()));
             },
           ),
         ],
