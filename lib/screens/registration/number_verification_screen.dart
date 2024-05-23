@@ -1,3 +1,5 @@
+import 'package:angkas_clone_app/screens/rider-side/rider_maps_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/registration/rider_details.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
@@ -46,7 +48,8 @@ class VerificationScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   onSubmit: (String verificationCode) async {
                     try {
-                      final accountNotifer = ref.read(accountProvider.notifier);
+                      final accountNotifier =
+                          ref.read(accountProvider.notifier);
 
                       PhoneAuthCredential credential =
                           PhoneAuthProvider.credential(
@@ -54,7 +57,40 @@ class VerificationScreen extends ConsumerWidget {
                               smsCode: verificationCode);
                       await auth.signInWithCredential(credential);
 
-                      accountNotifer.updateAccount(
+                      final QuerySnapshot result = await FirebaseFirestore
+                          .instance
+                          .collection('accounts')
+                          .where('phoneNumber', isEqualTo: phoneNumber)
+                          .limit(1)
+                          .get();
+                      final List<DocumentSnapshot> documents = result.docs;
+
+                      if (documents.isNotEmpty) {
+                        final DocumentSnapshot document = documents.first;
+                        final data = document.data() as Map<String, dynamic>;
+
+                        accountNotifier.updateAccount(
+                            emailID: data['emailID'] ?? '',
+                            phoneNumber: data['phoneNumber'] ?? phoneNumber,
+                            firstName: data['firstName'] ?? '',
+                            middleName: data['middleName'],
+                            lastName: data['lastName'] ?? '',
+                            sex: data['sex'] ?? '',
+                            weight: data['weight'] ?? 0.0,
+                            userType: data['userType'] ?? '');
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            buildSnackBar(
+                                "Logging in to Existing User.", true, context));
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RiderMapsScreen()));
+                        return;
+                      }
+
+                      accountNotifier.updateAccount(
                         phoneNumber: phoneNumber,
                         firstName: '',
                         middleName: null,

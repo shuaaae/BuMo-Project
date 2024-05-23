@@ -23,6 +23,7 @@ class AccountNotifier extends StateNotifier<Account> {
 
   void updateAccount(
       {String? phoneNumber,
+      String? emailID,
       String? firstName,
       String? middleName,
       String? lastName,
@@ -30,6 +31,7 @@ class AccountNotifier extends StateNotifier<Account> {
       double? weight,
       String? userType}) {
     state = Account(
+      emailID: emailID,
       phoneNumber: phoneNumber,
       firstName: firstName,
       middleName: middleName,
