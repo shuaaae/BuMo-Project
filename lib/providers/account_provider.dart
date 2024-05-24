@@ -64,6 +64,19 @@ class AccountNotifier extends StateNotifier<Account> {
       return null;
     }
   }
+
+  Future<String> getUserType(String userId) async {
+    final userData = await FirebaseFirestore.instance
+        .collection('accounts')
+        .doc(userId)
+        .get();
+
+    if (userData.exists) {
+      return userData['userType'];
+    } else {
+      return Future.error('User not found');
+    }
+  }
 }
 
 class DriverAccountNotifier extends StateNotifier<DriverAccount> {
