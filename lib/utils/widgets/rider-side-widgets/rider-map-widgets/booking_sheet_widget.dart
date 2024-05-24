@@ -61,7 +61,7 @@ class BookingSheetWidget extends StatelessWidget {
               ),
               Text(duration),
               Text(
-                'P $calculatedFare',
+                'P$calculatedFare',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
             ],

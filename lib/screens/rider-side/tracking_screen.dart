@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'package:angkas_clone_app/screens/rider-side/driver_rating_screen.dart';
+import 'package:angkas_clone_app/utils/constants/box_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:angkas_clone_app/utils/functions/map_functions.dart';
-import 'package:angkas_clone_app/models/booking.dart'; // Make sure to import your Location model
+import 'package:angkas_clone_app/models/booking.dart';
 
 class TrackingScreen extends StatefulWidget {
   final LatLng destination;
@@ -27,7 +29,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
   Set<Polyline> _polylines = {};
   Position? _currentPosition;
   StreamSubscription<Position>? _positionStreamSubscription;
-  bool _hasArrived = false; // New variable to track if the user has arrived
+  bool _hasArrived = false;
 
   @override
   void initState() {
@@ -53,7 +55,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
     setState(() {
       _currentPosition = position;
       _markers.add(Marker(
-        markerId: MarkerId('currentPosition'),
+        markerId: const MarkerId('currentPosition'),
         position: LatLng(position.latitude, position.longitude),
         icon: BitmapDescriptor.defaultMarker,
       ));
@@ -64,15 +66,15 @@ class _TrackingScreenState extends State<TrackingScreen> {
 
   void _startLocationUpdates() {
     _positionStreamSubscription = Geolocator.getPositionStream(
-      locationSettings:
-          LocationSettings(accuracy: LocationAccuracy.high, distanceFilter: 10),
+      locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high, distanceFilter: 10),
     ).listen((Position position) {
       setState(() {
         _currentPosition = position;
         _markers.removeWhere(
             (marker) => marker.markerId.value == 'currentPosition');
         _markers.add(Marker(
-          markerId: MarkerId('currentPosition'),
+          markerId: const MarkerId('currentPosition'),
           position: LatLng(position.latitude, position.longitude),
           icon: BitmapDescriptor.defaultMarker,
         ));
@@ -101,7 +103,7 @@ class _TrackingScreenState extends State<TrackingScreen> {
         _polylines.clear();
         if (polylineCoordinates.isNotEmpty) {
           _polylines.add(Polyline(
-            polylineId: PolylineId('route'),
+            polylineId: const PolylineId('route'),
             color: Colors.blue,
             width: 6,
             points: polylineCoordinates,
@@ -139,27 +141,12 @@ class _TrackingScreenState extends State<TrackingScreen> {
         setState(() {
           _hasArrived = true;
         });
-        _showArrivalDialog();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const DriverRatingScreen()));
       }
     }
-  }
-
-  void _showArrivalDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Arrived!'),
-        content: Text('You have arrived at your destination.'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
@@ -181,6 +168,115 @@ class _TrackingScreenState extends State<TrackingScreen> {
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
         ),
+        Positioned(
+            bottom: 0,
+            child: Column(
+              children: [
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 0, bottom: 0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            child: const Center(child: Text("Safety Guide")),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                boxShadow: [kBoxShadow],
+                                borderRadius: BorderRadius.circular(25)),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              Position position = await determinePosition();
+                              final GoogleMapController controller =
+                                  await _controller.future;
+
+                              controller.animateCamera(
+                                CameraUpdate.newCameraPosition(
+                                  CameraPosition(
+                                    target: LatLng(
+                                        position.latitude, position.longitude),
+                                    zoom: 16,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: const PhysicalModel(
+                              color: Colors.black,
+                              elevation: 10.0,
+                              shape: BoxShape.circle,
+                              child: CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.my_location,
+                                    color: Color.fromARGB(255, 25, 90, 158)),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        width: MediaQuery.sizeOf(context).width,
+                        margin: const EdgeInsets.only(
+                            top: 10, bottom: 0, right: 0, left: 0),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(25),
+                                topRight: Radius.circular(25))),
+                        child: Center(
+                            child: Text(
+                          "In transit tayo. Don't use your phone!",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: Colors.white),
+                        )),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  padding: const EdgeInsets.all(15),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [kBoxShadow],
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              'assets/images/helmet.png',
+                              height: 30,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Passenger >",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Text("P56.00",
+                          style: Theme.of(context).textTheme.bodyLarge)
+                    ],
+                  ),
+                )
+              ],
+            ))
       ]),
       extendBodyBehindAppBar: true,
     );
