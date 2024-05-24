@@ -5,6 +5,7 @@ import 'package:angkas_clone_app/screens/rider-side/rider_maps_screen.dart';
 import 'package:angkas_clone_app/utils/widgets/build_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final riderAccountProvider =
     StateNotifierProvider<RiderAccountNotifier, RiderAccount>(
@@ -120,8 +121,8 @@ class RiderDetailsScreen extends ConsumerWidget {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Rider Account Successfully created.", true, context));
 
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => RiderMapsScreen()));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => RiderMapsScreen(passengerID: ,)));
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(buildSnackBar(
                 "Something went wrong with Creating the Account.",

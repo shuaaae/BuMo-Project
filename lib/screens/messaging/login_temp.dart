@@ -1,8 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:angkas_clone_app/providers/account_provider.dart';
 import 'package:angkas_clone_app/screens/messaging/inbox_screen.dart';
+import 'package:angkas_clone_app/screens/rider-side/rider_maps_screen.dart';
+import 'package:angkas_clone_app/screens/driver-side/driver_maps_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginTemp extends StatefulWidget {
+  const LoginTemp({super.key});
+
   @override
   State<LoginTemp> createState() => _LoginTempState();
 }
@@ -13,23 +20,39 @@ class _LoginTempState extends State<LoginTemp> {
 
   void loginUser() async {
     try {
-      // Sign in with email and password
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
-        password: _passwordController.text,
+        password: _passwordController.text.trim(),
       );
 
-      // Navigate to InboxScreen if login successful
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => InboxScreen()),
-      );
+      print("HOYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+      print(_emailController);
+      print(_passwordController);
+
+      final String userId = userCredential.user!.uid;
+      final String userType = await AccountNotifier().getUserType(userId);
+
+      print(userType);
+
+      if (userType == "driver") {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  DriverMapsScreen(driverID: userCredential.user!.uid),
+            ));
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                RiderMapsScreen(passengerID: userCredential.user!.uid),
+          ),
+        );
+      }
     } catch (error) {
-      // Handle login errors
-      // ignore: avoid_print
       print('Login error: $error');
-      // Show error message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to sign in. Please check your credentials.'),

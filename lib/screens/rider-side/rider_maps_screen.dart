@@ -10,6 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RiderMapsScreen extends ConsumerWidget {
+  final String passengerID;
+  RiderMapsScreen({super.key, required this.passengerID});
+
   GoogleMapController? myMapController;
   bool isSettingSource = true;
   LatLng? sourceLocation;
@@ -21,8 +24,6 @@ class RiderMapsScreen extends ConsumerWidget {
   final calculatedFare = 100.00;
   final serviceType = 'Passenger';
   final duration = '2-10 min(s)';
-
-  RiderMapsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
