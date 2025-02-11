@@ -2,18 +2,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:angkas_clone_app/models/booking.dart';
 
 class MapHelpers {
   static Future<List<LatLng>> getPolylinePoints(
-      Location pickupLocation, Location destinationLocation) async {
+/*************  ✨ Codeium Command ⭐  *************/
+      /// Returns the coordinates of the shortest driving route from [pickupLocation] to [destinationLocation]
+      ///
+      /// The [TravelMode] used is [TravelMode.driving], but this can be changed to other modes such as
+      /// [TravelMode.walking] or [TravelMode.bicycling].
+      ///
+      /// If the route cannot be found, an empty list is returned.
+/******  9ded828c-9dce-42ee-9254-5c6079492cd7  *******/
+      Location pickupLocation,
+      Location destinationLocation) async {
     PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      APIKeys.googleMaps,
-      PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
-      PointLatLng(destinationLocation.latitude, destinationLocation.longitude),
+    PolylineRequest request = PolylineRequest(
+      origin: PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
+      destination: PointLatLng(
+          destinationLocation.latitude, destinationLocation.longitude),
+      mode: TravelMode
+          .driving, // Specify the travel mode (e.g., driving, walking, bicycling)
     );
+
+    // Pass the request to getRouteBetweenCoordinates
+    PolylineResult result =
+        await polylinePoints.getRouteBetweenCoordinates(request: request);
 
     List<LatLng> polylineCoordinates = [];
     if (result.points.isNotEmpty) {

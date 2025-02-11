@@ -1,6 +1,13 @@
-# This file controls Flutter-level build steps. It should not be edited.
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.31.5)
 
+# Define the missing function apply_standard_settings
+function(apply_standard_settings target_name)
+  set_target_properties(${target_name} PROPERTIES CXX_STANDARD 17)
+  # Ensure the global CXX_STANDARD is also set
+  set(CMAKE_CXX_STANDARD 17 CACHE STRING "" FORCE)
+endfunction()
+
+# Original contents start here
 set(EPHEMERAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ephemeral")
 
 # Configuration provided via flutter tool.
@@ -19,10 +26,10 @@ endif()
 set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/flutter_windows.dll")
 
 # Published to parent scope for install step.
-set(FLUTTER_LIBRARY ${FLUTTER_LIBRARY} PARENT_SCOPE)
-set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" PARENT_SCOPE)
-set(PROJECT_BUILD_DIR "${PROJECT_DIR}/build/" PARENT_SCOPE)
-set(AOT_LIBRARY "${PROJECT_DIR}/build/windows/app.so" PARENT_SCOPE)
+set(FLUTTER_LIBRARY "${EPHEMERAL_DIR}/flutter_windows.dll" PARENT_SCOPE)
+set(FLUTTER_ICU_DATA_FILE "${EPHEMERAL_DIR}/icudtl.dat" CACHE INTERNAL "Path to ICU data file")
+set(PROJECT_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/build/" PARENT_SCOPE)
+set(AOT_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/build/windows/app.so" PARENT_SCOPE)
 
 list(APPEND FLUTTER_LIBRARY_HEADERS
   "flutter_export.h"
@@ -55,7 +62,11 @@ list(APPEND CPP_WRAPPER_SOURCES_APP
 )
 list(TRANSFORM CPP_WRAPPER_SOURCES_APP PREPEND "${WRAPPER_ROOT}/")
 
-# Wrapper sources needed for a plugin.
+# Define the missing function apply_standard_settings
+function(apply_standard_settings target_name)
+  set_target_properties(${target_name} PROPERTIES CXX_STANDARD 17)
+endfunction()
+
 add_library(flutter_wrapper_plugin STATIC
   ${CPP_WRAPPER_SOURCES_CORE}
   ${CPP_WRAPPER_SOURCES_PLUGIN}

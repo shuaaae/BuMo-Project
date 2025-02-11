@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:angkas_clone_app/models/booking.dart';
-import 'package:angkas_clone_app/utils/constants/api_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,17 +28,26 @@ Future<Position> determinePosition() async {
   }
 
   return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high);
+      locationSettings:
+          const LocationSettings(accuracy: LocationAccuracy.high));
 }
 
 Future<List<LatLng>> getPolylinePoints(
     Location pickupLocation, Location destinationLocation) async {
   PolylinePoints polylinePoints = PolylinePoints();
-  PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-    APIKeys.googleMaps,
-    PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
-    PointLatLng(destinationLocation.latitude, destinationLocation.longitude),
+
+  // Create a PolylineRequest with the required parameters
+  PolylineRequest request = PolylineRequest(
+    origin: PointLatLng(pickupLocation.latitude, pickupLocation.longitude),
+    destination: PointLatLng(
+        destinationLocation.latitude, destinationLocation.longitude),
+    mode: TravelMode
+        .driving, // Specify the travel mode (e.g., driving, walking, bicycling)
   );
+
+  // Pass the request to getRouteBetweenCoordinates
+  PolylineResult result =
+      await polylinePoints.getRouteBetweenCoordinates(request: request);
 
   List<LatLng> polylineCoordinates = [];
   if (result.points.isNotEmpty) {
@@ -47,34 +55,33 @@ Future<List<LatLng>> getPolylinePoints(
         .map((point) => LatLng(point.latitude, point.longitude))
         .toList();
   }
+
   return polylineCoordinates;
 }
 
 Future<void> moveCameraToLocations(BuildContext context, LatLng pickupLocation,
     LatLng destinationLocation, GoogleMapController myMapController) async {
-  if (myMapController != null) {
-    LatLngBounds bounds = LatLngBounds(
-      southwest: LatLng(
-        min(pickupLocation.latitude, destinationLocation.latitude),
-        min(pickupLocation.longitude, destinationLocation.longitude),
-      ),
-      northeast: LatLng(
-        max(pickupLocation.latitude, destinationLocation.latitude),
-        max(pickupLocation.longitude, destinationLocation.longitude),
-      ),
-    );
+  LatLngBounds bounds = LatLngBounds(
+    southwest: LatLng(
+      min(pickupLocation.latitude, destinationLocation.latitude),
+      min(pickupLocation.longitude, destinationLocation.longitude),
+    ),
+    northeast: LatLng(
+      max(pickupLocation.latitude, destinationLocation.latitude),
+      max(pickupLocation.longitude, destinationLocation.longitude),
+    ),
+  );
 
-    LatLng center = LatLng(
-      (bounds.southwest.latitude + bounds.northeast.latitude) / 2,
-      (bounds.southwest.longitude + bounds.northeast.longitude) / 2,
-    );
+  LatLng center = LatLng(
+    (bounds.southwest.latitude + bounds.northeast.latitude) / 2,
+    (bounds.southwest.longitude + bounds.northeast.longitude) / 2,
+  );
 
-    double zoomLevel = calculateZoomLevel(bounds, MediaQuery.of(context).size);
+  double zoomLevel = calculateZoomLevel(bounds, MediaQuery.of(context).size);
 
-    myMapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(center, zoomLevel),
-    );
-  }
+  myMapController.animateCamera(
+    CameraUpdate.newLatLngZoom(center, zoomLevel),
+  );
 }
 
 double calculateZoomLevel(LatLngBounds bounds, Size screenSize) {

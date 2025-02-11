@@ -86,7 +86,9 @@ class VerificationScreen extends ConsumerWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RiderMapsScreen()));
+                                builder: (context) => RiderMapsScreen(
+                                      passengerID: '',
+                                    )));
                         return;
                       }
 
