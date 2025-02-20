@@ -1,0 +1,2 @@
+C:/BuMo-Project main/android/app/.cxx/Debug/1w124y19/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/BuMo-Project main/android/app/.cxx/Debug/1w124y19/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -1,11 +1,9 @@
-import 'package:angkas_clone_app/screens/login_screen.dart';
 import 'package:angkas_clone_app/screens/registration/register_number_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:page_view_indicators/page_view_indicators.dart';
 
 class OnBoarding extends StatefulWidget {
-  const OnBoarding({Key? key}) : super(key: key);
+  const OnBoarding({super.key});
 
   @override
   State<OnBoarding> createState() => _OnBoardingState();
@@ -17,7 +15,7 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       // Page 1
       Container(
         child: Column(
@@ -110,13 +108,13 @@ class _OnBoardingState extends State<OnBoarding> {
                 _currentPageNotifier.value = page;
               });
             },
-            children: _pages,
+            children: pages,
           ),
         ),
         CirclePageIndicator(
           size: 8.0,
           selectedSize: 8.0,
-          itemCount: _pages.length,
+          itemCount: pages.length,
           currentPageNotifier: _currentPageNotifier,
         ),
         SizedBox(

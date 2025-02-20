@@ -9,11 +9,11 @@ import 'package:angkas_clone_app/utils/widgets/rider-side-widgets/navigation_dra
 import 'package:angkas_clone_app/utils/widgets/driver-side-widgets/booking_info_widget.dart';
 import 'package:angkas_clone_app/utils/functions/map_helpers.dart';
 import 'package:angkas_clone_app/utils/functions/map_functions.dart';
-import 'package:angkas_clone_app/utils/functions/name_coordinates.dart';
 
+// ignore: must_be_immutable
 class DriverMapsScreen extends ConsumerWidget {
   final String driverID;
-  DriverMapsScreen({Key? key, required this.driverID}) : super(key: key);
+  DriverMapsScreen({super.key, required this.driverID});
 
   GoogleMapController? myMapController;
   Set<Marker> markers = {};
@@ -93,44 +93,40 @@ class DriverMapsScreen extends ConsumerWidget {
           final additionalPickupLoc2LatLng = LatLng(
               additionalPickupLoc2.latitude, additionalPickupLoc2.longitude);
 
-          if (passenger != null) {
-            markers = {
-              Marker(
-                markerId: MarkerId('myCurrentArea'),
-                position: initialLocLatLng,
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
-                infoWindow: InfoWindow(title: 'My Current Area'),
-              ),
-              Marker(
-                markerId: MarkerId('pickup'),
-                position: pickupLocLatLng,
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueBlue),
-                infoWindow: InfoWindow(title: 'Pickup Location'),
-              ),
-              Marker(
-                markerId: MarkerId('pickup2'),
-                position: additionalPickupLoc1LatLng,
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueGreen),
-                infoWindow: InfoWindow(title: 'Pickup Location 2'),
-              ),
-              Marker(
-                markerId: MarkerId('pickup3'),
-                position: additionalPickupLoc2LatLng,
-                icon: BitmapDescriptor.defaultMarkerWithHue(
-                    BitmapDescriptor.hueGreen),
-                infoWindow: InfoWindow(title: 'Pickup Location 3'),
-              ),
-            };
+          markers = {
+            Marker(
+              markerId: MarkerId('myCurrentArea'),
+              position: initialLocLatLng,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
+              infoWindow: InfoWindow(title: 'My Current Area'),
+            ),
+            Marker(
+              markerId: MarkerId('pickup'),
+              position: pickupLocLatLng,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
+              infoWindow: InfoWindow(title: 'Pickup Location'),
+            ),
+            Marker(
+              markerId: MarkerId('pickup2'),
+              position: additionalPickupLoc1LatLng,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen),
+              infoWindow: InfoWindow(title: 'Pickup Location 2'),
+            ),
+            Marker(
+              markerId: MarkerId('pickup3'),
+              position: additionalPickupLoc2LatLng,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueGreen),
+              infoWindow: InfoWindow(title: 'Pickup Location 3'),
+            ),
+          };
 
-            if (initialLoc != null && pickupLoc != null) {
-              MapHelpers.getPolylines(initialLoc, pickupLoc).then((polyline) {
-                polylines = polyline;
-              });
-            }
-          }
+          MapHelpers.getPolylines(initialLoc, pickupLoc).then((polyline) {
+            polylines = polyline;
+          });
 
           return Scaffold(
             appBar: AppBar(
@@ -185,11 +181,9 @@ class DriverMapsScreen extends ConsumerWidget {
 
                           polylines.clear();
 
-                          if (initialLoc != null && pickupLoc != null) {
-                            moveCameraToLocations(context, initialLocLatLng,
-                                pickupLocLatLng, controller);
-                            _createRoute(initialLoc, pickupLoc);
-                          }
+                          moveCameraToLocations(context, initialLocLatLng,
+                              pickupLocLatLng, controller);
+                          _createRoute(initialLoc, pickupLoc);
                         },
                         myLocationEnabled: true,
                         myLocationButtonEnabled: false,
@@ -224,19 +218,17 @@ class DriverMapsScreen extends ConsumerWidget {
     final List<LatLng> polylineCoordinates =
         await MapHelpers.getPolylinePoints(start, end);
 
-    if (polylineCoordinates != null) {
-      // Print the coordinates for debugging
-      polylineCoordinates.forEach((coordinate) {
-        print("SO MAO NI");
-        print('Lat: ${coordinate.latitude}, Lng: ${coordinate.longitude}');
-      });
-
-      polylines.add(Polyline(
-        polylineId: PolylineId("route"),
-        points: polylineCoordinates,
-        color: Colors.blue,
-        width: 5,
-      ));
+    // Print the coordinates for debugging
+    for (var coordinate in polylineCoordinates) {
+      print("SO MAO NI");
+      print('Lat: ${coordinate.latitude}, Lng: ${coordinate.longitude}');
     }
+
+    polylines.add(Polyline(
+      polylineId: PolylineId("route"),
+      points: polylineCoordinates,
+      color: Colors.blue,
+      width: 5,
+    ));
   }
 }

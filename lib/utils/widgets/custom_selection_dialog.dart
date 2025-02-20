@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomSelectionDialog extends StatelessWidget {
   final Function(String) onSelection;
-  const CustomSelectionDialog({required this.onSelection});
+  const CustomSelectionDialog({super.key, required this.onSelection});
 
   @override
   Widget build(BuildContext context) {

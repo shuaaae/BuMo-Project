@@ -21,7 +21,7 @@ class AppTheme {
       inputDecorationTheme: AppTextFormFieldTheme.lightInputDecorationTheme,
       colorScheme: const ColorScheme.light().copyWith(
           primary: Color.fromARGB(255, 223, 245, 253),
-          background: const Color.fromARGB(255, 227, 238, 246),
+          surface: const Color.fromARGB(255, 227, 238, 246),
           error: const Color.fromARGB(255, 248, 222, 220)));
 
   // Dark Theme

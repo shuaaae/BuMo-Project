@@ -1,9 +1,8 @@
 import 'package:angkas_clone_app/utils/widgets/sender_chat.dart';
 import 'package:angkas_clone_app/utils/widgets/receiver_chat.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:angkas_clone_app/models/messaging.dart';
 import 'package:intl/intl.dart';
+import 'package:angkas_clone_app/models/messaging.dart';
 
 class ChatScreen extends StatefulWidget {
   final String personName;
@@ -20,20 +19,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final String myID = "Nio";
   final String senderID = "Nio";
 
-  final String myID2 = "Jeremy Habal";
-  final String senderID2 = "Jeremy Habal";
-
-  final String myID3 = "Dreyber SweetLober";
-  final String senderID3 = "Dreyber SweetLober";
-
-  final String messagingID = "Mess#1";
-  final String messagingID2 = "Mess#2";
-  final String messagingID3 = "Mess#3";
-
-  final String chatID = "Chat#1";
-  final String chatID2 = "Chat#2";
-  final String chatID3 = "Chat#3";
-
   @override
   void initState() {
     super.initState();
@@ -48,11 +33,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // Function to handle sending message
   void _sendMessage(String messageStr) {
-    DateTime now = DateTime.now();
-    Timestamp timestamp = Timestamp.fromDate(now);
+    DateTime timestamp = DateTime.now();
 
     ChatLog newMessage = ChatLog(
-      dateTime: timestamp,
+      dateTime: timestamp, // Ensure non-nullable timestamp
       messageStr: messageStr,
       senderID: senderID,
     );
@@ -61,27 +45,22 @@ class _ChatScreenState extends State<ChatScreen> {
       _messages.add(newMessage);
       _textEditingController.clear();
     });
-
-    // Save to Firebase
-    FirebaseFirestore.instance
-        .collection('messaging')
-        .doc(messagingID2)
-        .collection(chatID2)
-        .add(newMessage.toMap());
   }
 
-  // Function to fetch messages from Firestore
+  // Function to fetch messages (simulated)
   void _fetchMessages() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection('messaging')
-        .doc(messagingID2)
-        .collection(chatID2)
-        .orderBy('dateTime')
-        .get();
-
-    List<ChatLog> fetchedMessages = snapshot.docs.map((doc) {
-      return ChatLog.fromSnapShot(doc); // Use fromSnapShot method instead
-    }).toList();
+    List<ChatLog> fetchedMessages = [
+      ChatLog(
+        dateTime: DateTime.now().subtract(const Duration(minutes: 5)),
+        messageStr: "Hello!",
+        senderID: senderID,
+      ),
+      ChatLog(
+        dateTime: DateTime.now().subtract(const Duration(minutes: 4)),
+        messageStr: "Hi, how are you?",
+        senderID: "Jeremy Habal",
+      ),
+    ];
 
     setState(() {
       _messages.addAll(fetchedMessages);
@@ -89,12 +68,11 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   // Function to format timestamp to PST (Philippine Standard Time)
-  String _formatTimestamp(Timestamp timestamp) {
-    DateTime utcDateTime = timestamp.toDate();
+  String _formatTimestamp(DateTime? timestamp) {
+    if (timestamp == null) return "Unknown"; // Handle null timestamps
     DateTime pstDateTime =
-        utcDateTime.add(const Duration(hours: 8)); // Adjusting to PST
-    String formattedDate = DateFormat('h:mm a').format(pstDateTime);
-    return formattedDate;
+        timestamp.add(const Duration(hours: 8)); // Adjusting to PST
+    return DateFormat('h:mm a').format(pstDateTime);
   }
 
   @override
@@ -123,22 +101,20 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
               itemCount: _messages.length,
               separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(
-                    height: 10); // Add spacing of 10 between items
+                return const SizedBox(height: 10);
               },
               itemBuilder: (context, index) {
                 ChatLog message = _messages[index];
-                // Check if the sender ID matches your ID
                 bool isMe = message.senderID == myID;
 
                 return isMe
                     ? SenderChat(
                         message: message.messageStr ?? '',
-                        timestamp: _formatTimestamp(message.dateTime!),
+                        timestamp: _formatTimestamp(message.dateTime),
                       )
                     : ReceiverChat(
                         message: message.messageStr ?? '',
-                        timestamp: _formatTimestamp(message.dateTime!),
+                        timestamp: _formatTimestamp(message.dateTime),
                       );
               },
             ),
@@ -151,7 +127,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextFormField(
                     controller: _textEditingController,
-                    maxLines: null, // Allow up to 5 lines
+                    maxLines: null,
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
                       hintText: 'Type something here...',

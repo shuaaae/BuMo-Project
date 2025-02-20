@@ -17,6 +17,7 @@ class BookingInfoSheet extends StatelessWidget {
     return DateFormat('hh:mm a').format(dateTime);
   }
 
+  // ignore: unused_element
   void _proceedTransaction(BookComplete booking) {
     FirebaseFirestore.instance
         .collection('transaction')
@@ -89,7 +90,7 @@ class BookingInfoSheet extends StatelessWidget {
                     const Icon(Icons.arrow_forward_ios_rounded, size: 12),
                   ],
                 ),
-                Text('${formatTime(booking.dateTime)}'),
+                Text(formatTime(booking.dateTime)),
               ],
             ),
             const SizedBox(height: 15),

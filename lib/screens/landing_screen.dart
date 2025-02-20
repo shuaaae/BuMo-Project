@@ -3,6 +3,8 @@ import 'package:angkas_clone_app/utils/effects/fade_page_route.dart';
 import 'package:flutter/material.dart';
 
 class LandingScreen extends StatefulWidget {
+  const LandingScreen({super.key});
+
   @override
   State<LandingScreen> createState() => _LandingScreenState();
 }

@@ -125,20 +125,18 @@ class BookingNotifier extends StateNotifier<Booking?> {
     final pickupLoc = booking.pickupLoc;
     final destinationLoc = booking.destinationLoc;
 
-    if (pickupLoc != null && destinationLoc != null) {
-      final distance = calculateDistance(
-        destinationLoc.latitude,
-        destinationLoc.longitude,
-        pickupLoc.latitude,
-        pickupLoc.longitude,
-      );
-      booking.locationDistance =
-          double.parse((distance / 1000).toStringAsFixed(2));
-      // if (state != null) {
-      //   state = state.copyWith(
-      //       locationDistance: distance / 1000); // Convert to km if needed
-      // }
-    }
+    final distance = calculateDistance(
+      destinationLoc.latitude,
+      destinationLoc.longitude,
+      pickupLoc.latitude,
+      pickupLoc.longitude,
+    );
+    booking.locationDistance =
+        double.parse((distance / 1000).toStringAsFixed(2));
+    // if (state != null) {
+    //   state = state.copyWith(
+    //       locationDistance: distance / 1000); // Convert to km if needed
+    // }
     return booking;
   }
 

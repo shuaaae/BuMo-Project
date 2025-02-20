@@ -10,7 +10,6 @@ class SignUpScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PhoneNumber number = PhoneNumber(isoCode: 'PH');
-    String initialCountry = 'PH';
     final TextEditingController controller = TextEditingController();
     PhoneNumber inputtedNumber = PhoneNumber();
 

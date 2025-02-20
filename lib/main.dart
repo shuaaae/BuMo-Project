@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:angkas_clone_app/firebase_options.dart';
 import 'package:angkas_clone_app/screens/landing_screen.dart';
 import 'package:angkas_clone_app/screens/messaging/inbox_screen.dart';

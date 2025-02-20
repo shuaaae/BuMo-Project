@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PlacePredictionsNotifier
     extends StateNotifier<List<AutocompletePrediction>> {
-  PlacePredictionsNotifier(List<AutocompletePrediction> state) : super(state);
+  PlacePredictionsNotifier(super.state);
 
   void updatePredictions(List<AutocompletePrediction> predictions) {
     state = predictions;

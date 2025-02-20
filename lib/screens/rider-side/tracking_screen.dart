@@ -13,18 +13,18 @@ class TrackingScreen extends StatefulWidget {
   final Set<Polyline> initialPolylines;
 
   const TrackingScreen({
-    Key? key,
+    super.key,
     required this.destination,
     required this.initialMarkers,
     required this.initialPolylines,
-  }) : super(key: key);
+  });
 
   @override
   _TrackingScreenState createState() => _TrackingScreenState();
 }
 
 class _TrackingScreenState extends State<TrackingScreen> {
-  Completer<GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   Set<Marker> _markers = {};
   Set<Polyline> _polylines = {};
   Position? _currentPosition;
@@ -183,11 +183,11 @@ class _TrackingScreenState extends State<TrackingScreen> {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(10),
-                            child: const Center(child: Text("Safety Guide")),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [kBoxShadow],
                                 borderRadius: BorderRadius.circular(25)),
+                            child: const Center(child: Text("Safety Guide")),
                           ),
                           GestureDetector(
                             onTap: () async {
